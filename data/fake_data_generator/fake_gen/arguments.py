@@ -2,7 +2,6 @@ import argparse
 
 from .version import version
 
-
 parser = argparse.ArgumentParser(
     prog='fake_gen',
     description=f'Fake data generator version {version}',

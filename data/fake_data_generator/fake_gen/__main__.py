@@ -3,7 +3,6 @@ from argparse import Namespace
 from .arguments import parser
 from .worker import do_work
 
-
 args = parser.parse_args()
 
 match args:
