@@ -1,2 +1,8 @@
 # Async Api sprint 1
-Структура проекта и код, который был приведен в уроке по [FastAPI](https://practicum.yandex.ru/learn/middle-python-plus-async/courses/d0d656c1-003b-4be2-92ff-c7ef3965e762/sprints/222050/topics/480e3f13-043a-4031-a0d5-536198e90a7f/lessons/bb09cf61-e16f-46df-9efc-076520708623/). 
+Async API - сервис асинхронного апи для кинотеатра.
+
+## Local development
+- Install python 3.11 (easy way is [pyenv](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation))
+- Install [poetry](https://python-poetry.org/docs/#installing-with-pipx)
+- Run `poetry install` to create `.venv`
+
