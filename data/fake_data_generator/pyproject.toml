@@ -1,0 +1,61 @@
+[tool.poetry]
+name = "fake_gen"
+version = "0.1.0"
+description = ""
+authors = ["grm <golosov_sa@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = ">=2.4.2"
+faker = ">=19.11.0"
+polyfactory = ">=2.10.0"
+asyncpg = "^0.29.0"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+flake8-pyproject = "^1.2.3"
+bandit = "^1.7.5"
+flake8-bandit = "^4.1.1"
+wemake-python-styleguide = "^0.18.0"
+isort = "^5.12.0"
+mypy = "^1.6.1"
+
+[tool.flake8]
+python_version = "3.11"
+format = "wemake"
+max-line-length = 119
+max-line-complexity = 20
+max-methods=10
+max-try-body-length = 3
+inline-quotes = "single"
+max-string-usages = 10
+# D - все докстринги, остальное - обсуждаемо
+ignore = "D, WPS300, WPS305, WPS306"
+per-file-ignores = """
+"""
+#  */types/*.py: <набор исключений стилей для описания типов>
+#  */types.py: <набор исключений стилей для описания типов>
+#  <другие исключения>
+# """
+exclude = """
+  */tests/*,
+"""
+
+[tool.mypy]
+python_version = "3.11"
+follow_imports = "silent"
+ignore_missing_imports = true
+check_untyped_defs = true
+exclude = [".*/tests/.*"]
+plugins = "pydantic.mypy"
+# strict_optional = true # <-----Обсуждаемо, но кому нужен хардкор
+
+[tool.isort]
+multi_line_output = 3
+line_length = 119
+include_trailing_comma = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
