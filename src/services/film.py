@@ -17,37 +17,25 @@ class FilmService:
         self.redis = redis
         self.elastic = elastic
 
-    async def get_films(self, *, sort: str, page_size: int,
-                        page_number: int) -> List[Optional[Film]]:
+    async def get_films(
+            self, *,
+            sort: str,
+            page_size: int,
+            page_number: int,
+            genre: str | None
+    ) -> List[Optional[Film]]:
         """
-        Возвращает список фильмов по параметрам.
+        Возвращает список фильмов.
         Может возвращать пустой список, так как база фильмов может быть пуста.
         """
 
         films = await self._get_films_from_elastic(
             sort=sort,
             page_size=page_size,
-            page_number=page_number
+            page_number=page_number,
+            genre=genre
         )
 
-        return films
-
-    async def _get_films_from_elastic(self, sort: str, page_size: int,
-                                      page_number: int) -> List[Optional[Film]]:
-        """Получаем список фильмов из Elasticsearch"""
-        films = []
-        try:
-            docs = await self.elastic.search(
-                index="movies",
-                sort=f"{sort[1:]}:desc" if sort.startswith("-") else sort,
-                size=page_size,
-                from_=((page_number - 1) * page_size)
-            )
-        except NotFoundError:
-            return []
-
-        for doc in docs["hits"]["hits"]:
-            films.append(Film(**doc["_source"]))
         return films
 
     async def get_by_search(self) -> List[Optional[Film]]:
@@ -70,6 +58,46 @@ class FilmService:
             await self._put_film_to_cache(film)
 
         return film
+
+    async def _get_films_from_elastic(
+            self,
+            sort: str,
+            page_size: int,
+            page_number: int,
+            genre: str | None
+    ) -> List[Optional[Film]]:
+        """
+        Получает список фильмов из Elasticsearch
+        с необязательным фильтром по жанрам.
+        """
+        query = None
+        films = []
+
+        if genre is not None:
+            query = {
+                "bool": {
+                    "filter": {
+                        "term": {
+                            "genre": genre
+                        }
+                    }
+                }
+            }
+
+        try:
+            docs = await self.elastic.search(
+                index="movies",
+                query=query,
+                sort=f"{sort[1:]}:desc" if sort.startswith("-") else sort,
+                size=page_size,
+                from_=((page_number - 1) * page_size),
+            )
+        except NotFoundError:
+            return []
+
+        for doc in docs["hits"]["hits"]:
+            films.append(Film(**doc["_source"]))
+        return films
 
     async def _get_film_from_elastic(self, film_id: str) -> Optional[Film]:
         """Получаем данные о фильме из Elasticsearch."""
