@@ -1,7 +1,7 @@
 from functools import lru_cache
-from typing import List, Optional
+from typing import Annotated, List, Optional
 
-from core import config
+from core.config import settings
 from db.elastic import get_elastic
 from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
@@ -17,26 +17,35 @@ class FilmService:
         self.redis = redis
         self.elastic = elastic
 
-    async def get_films(self, *, sort=None,
-                        page_size=50, page_number=1) -> List[Optional[Film]]:
+    async def get_films(self, *, sort: str, page_size: int,
+                        page_number: int) -> List[Optional[Film]]:
         """
         Возвращает список фильмов по параметрам.
         Может возвращать пустой список, так как база фильмов может быть пуста.
         """
 
-    async def _get_films_from_elastic(self, sort, page_size, page_number):
+        films = await self._get_films_from_elastic(
+            sort=sort,
+            page_size=page_size,
+            page_number=page_number
+        )
+
+        return films
+
+    async def _get_films_from_elastic(self, sort: str, page_size: int,
+                                      page_number: int) -> List[Optional[Film]]:
         """Получаем список фильмов из Elasticsearch"""
+        films = []
         try:
             docs = await self.elastic.search(
                 index="movies",
-                sort=sort,
+                sort=f"{sort[1:]}:desc" if sort.startswith("-") else sort,
                 size=page_size,
                 from_=((page_number - 1) * page_size)
             )
         except NotFoundError:
-            return None
+            return []
 
-        films = []
         for doc in docs["hits"]["hits"]:
             films.append(Film(**doc["_source"]))
         return films
@@ -83,13 +92,13 @@ class FilmService:
     async def _put_film_to_cache(self, film: Film):
         """Сохраняем данные о фильме в кеше."""
         await self.redis.set(film.id, film.model_dump_json(),
-                             config.RedisSettings.CACHE_EXPIRE_IN_SECONDS)
+                             settings.redis.CACHE_EXPIRE_IN_SECONDS)
 
 
 @lru_cache()
 def get_film_service(
-        redis: Redis = Depends(get_redis),
-        elastic: AsyncElasticsearch = Depends(get_elastic),
+        redis: Annotated[Redis, Depends(get_redis)],
+        elastic: Annotated[AsyncElasticsearch, Depends(get_elastic)],
 ) -> FilmService:
     """Провайдер FilmService."""
     return FilmService(redis, elastic)

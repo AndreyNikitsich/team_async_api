@@ -37,3 +37,6 @@ class Settings(BaseSettings):
     swagger: SwaggerSettings = SwaggerSettings()
     redis: RedisSettings = RedisSettings()
     es: ElasticSettings = ElasticSettings()
+
+
+settings = Settings()
