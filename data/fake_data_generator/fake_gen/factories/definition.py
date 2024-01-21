@@ -2,10 +2,10 @@ from typing import Generator
 
 from polyfactory.factories import TypedDictFactory
 
-from .mixins import TimestampedMixin
 from ..models.definition import Definition
 from ..providers.definitions import DefinitionProvider
 from ..settings import fake
+from .mixins import TimestampedMixin
 
 DEFINITIONS_COLLECTION = DefinitionProvider.definitions_collection
 DEFINITIONS_COLLECTION_LEN = len(DEFINITIONS_COLLECTION)

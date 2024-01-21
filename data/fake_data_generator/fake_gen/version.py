@@ -7,9 +7,9 @@ _VERSION_FILE = _ROOT_DIR / 'pyproject.toml'
 
 def _read_version() -> str:
     with _VERSION_FILE.open('rb') as version_file:
-        data = tomllib.load(version_file)
+        pyproject_data = tomllib.load(version_file)
 
-    return data['tool']['poetry']['version']
+    return pyproject_data['tool']['poetry']['version']
 
 
 version = _read_version()

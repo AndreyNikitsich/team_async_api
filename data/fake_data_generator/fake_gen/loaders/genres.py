@@ -3,10 +3,10 @@ from uuid import UUID
 
 from asyncpg import Connection
 
-from .load_unrelated import load_unrelated
 from ..counter import Counter
 from ..factories.genre import GenreFactory
 from ..models.genre import Genre
+from .load_unrelated import load_unrelated
 
 
 async def load_genres(connection: Connection, number_of: int, counter: Counter):

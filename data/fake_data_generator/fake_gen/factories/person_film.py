@@ -1,9 +1,9 @@
 from polyfactory import Require
 from polyfactory.factories import TypedDictFactory
 
-from .mixins import TimestampedMixin
 from ..models.person_film import PersonFilm
 from ..settings import fake
+from .mixins import TimestampedMixin
 
 
 class PersonFilmFactory(TimestampedMixin, TypedDictFactory[PersonFilm]):

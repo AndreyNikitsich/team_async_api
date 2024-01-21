@@ -3,10 +3,10 @@ from uuid import UUID
 
 from asyncpg import Connection
 
-from .load_unrelated import load_unrelated
 from ..counter import Counter
-from ..factories.definition import DefinitionFactory, DEFINITIONS_COLLECTION_LEN
+from ..factories.definition import DEFINITIONS_COLLECTION_LEN, DefinitionFactory
 from ..models.definition import Definition
+from .load_unrelated import load_unrelated
 
 
 async def load_definitions(connection: Connection, counter: Counter):

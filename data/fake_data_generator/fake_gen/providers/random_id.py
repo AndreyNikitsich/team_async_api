@@ -6,7 +6,7 @@ from ..settings import fake
 
 
 async def get_number_of_rows(connection: Connection, table: str) -> int:
-    return await connection.fetchval(f'SELECT COUNT (*) FROM content.{table}')
+    return await connection.fetchval(f'SELECT COUNT (*) FROM content.{table}')  # noqa: S608
 
 
 async def _get_random_id_from_table(

@@ -1,9 +1,9 @@
 from polyfactory import Require
 from polyfactory.factories import TypedDictFactory
 
-from .mixins import TimestampedMixin
 from ..models.definition_film import DefinitionFilm
 from ..settings import fake
+from .mixins import TimestampedMixin
 
 
 class DefinitionFilmFactory(TimestampedMixin, TypedDictFactory[DefinitionFilm]):

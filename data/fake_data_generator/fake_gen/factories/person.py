@@ -1,8 +1,8 @@
 from polyfactory.factories import TypedDictFactory
 
-from .mixins import TimestampedMixin
 from ..models.person import Person
 from ..settings import fake
+from .mixins import TimestampedMixin
 
 
 class PersonFactory(TimestampedMixin, TypedDictFactory[Person]):

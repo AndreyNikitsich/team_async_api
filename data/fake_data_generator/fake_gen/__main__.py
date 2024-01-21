@@ -11,8 +11,8 @@ match args:
     case Namespace():
         try:
             do_work(args.dsn, args.films, args.people, args.genres)
-        except Exception as e:
-            parser.error(e)
+        except Exception as exception:
+            parser.error(str(exception))
         parser.exit(0, 'Done')
 
     case _:

@@ -7,7 +7,7 @@ from ..counter import Counter
 from ..settings import CHUNK_SIZE
 
 
-async def load_unrelated(
+async def load_unrelated(  # noqa: WPS211
     connection: asyncpg.Connection,
     factory: type[TypedDictFactory],
     query: str,

@@ -33,12 +33,15 @@ max-string-usages = 10
 # D - все докстринги, остальное - обсуждаемо
 ignore = "D, WPS300, WPS305, WPS306"
 per-file-ignores = """
+  fake_gen/models/*.py: WPS115,WPS111
+  fake_gen/worker.py: WPS201
 """
 #  */types/*.py: <набор исключений стилей для описания типов>
 #  */types.py: <набор исключений стилей для описания типов>
 #  <другие исключения>
 # """
 exclude = """
+  .venv/*,
   */tests/*,
 """
 

@@ -3,10 +3,10 @@ from uuid import UUID
 
 from asyncpg import Connection
 
-from .load_unrelated import load_unrelated
 from ..counter import Counter
 from ..factories.person import PersonFactory
 from ..models.person import Person
+from .load_unrelated import load_unrelated
 
 
 async def load_people(connection: Connection, number_of: int, counter: Counter):
