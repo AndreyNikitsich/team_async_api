@@ -1,9 +1,6 @@
-import orjson
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
-
-
-def orjson_dumps(v, *, default):
-    return orjson.dumps(v, default=default).decode()
 
 
 class FilmPerson(BaseModel):
@@ -17,13 +14,9 @@ class Film(BaseModel):
     title: str
     description: str | None = Field("")
 
-    director: list[str] | None = Field([])
-    actors_names: list[str] | None = Field([])
-    writers_names: list[str] | None = Field([])
+    director: List[Optional[str]]
+    actors_names: List[Optional[str]]
+    writers_names: List[Optional[str]]
 
-    actors: list[FilmPerson] | None = Field([])
-    writers: list[FilmPerson] | None = Field([])
-
-    class Config:
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
+    actors: List[Optional[FilmPerson]]
+    writers: List[Optional[FilmPerson]]
