@@ -19,7 +19,7 @@ class FilmService:
 
     async def get_films(
             self, *,
-            sort: str,
+            sort: List[str],
             page_size: int,
             page_number: int,
             genre: Optional[List[str]]
@@ -40,7 +40,7 @@ class FilmService:
 
     async def get_by_search(
             self, *,
-            sort: str,
+            sort: List[str],
             page_size: int,
             page_number: int,
             query: str
@@ -76,7 +76,7 @@ class FilmService:
 
     async def _get_films_from_elastic(
             self,
-            sort: str,
+            sort: List[str],
             page_size: int,
             page_number: int,
             genre: Optional[List[str]]
@@ -102,25 +102,28 @@ class FilmService:
             page_number: int,
             page_size: int,
             query: Optional[dict[str, Any]],
-            sort: str) -> List[Film]:
+            sort: List[str]
+    ) -> List[Film]:
         films: List[Film] = []
         try:
             docs = await self.elastic.search(
                 index=settings.es.FILMS_INDEX,
                 query=query,
-                sort=f"{sort[1:]}:desc" if sort.startswith("-") else sort,
+                sort=[f"{item[1:]}:desc" if item.startswith("-") else item
+                      for item in sort],
                 size=page_size,
                 from_=((page_number - 1) * page_size),
             )
         except NotFoundError:
             return films
+
         for doc in docs["hits"]["hits"]:
             films.append(Film(**doc["_source"]))
         return films
 
     async def _get_films_by_search_from_elastic(
             self,
-            sort: str,
+            sort: List[str],
             page_size: int,
             page_number: int,
             query: str
