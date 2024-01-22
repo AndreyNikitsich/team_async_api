@@ -23,7 +23,7 @@ class FilmService:
             page_size: int,
             page_number: int,
             genre: str | None
-    ) -> List[Optional[Film]]:
+    ) -> List[Film]:
         """
         Возвращает список фильмов по параметрам.
         Может возвращать пустой список, так как база фильмов может быть пуста.
@@ -44,7 +44,7 @@ class FilmService:
             page_size: int,
             page_number: int,
             query: str
-    ) -> List[Optional[Film]]:
+    ) -> List[Film]:
         """
         Возвращает список фильмов по поиску.
         Может возвращать пустой список, так как по запросу могут
@@ -80,7 +80,7 @@ class FilmService:
             page_size: int,
             page_number: int,
             genre: str | None
-    ) -> List[Optional[Film]]:
+    ) -> List[Film]:
         """
         Получает список фильмов из Elasticsearch
         с необязательным фильтром по жанрам.
@@ -103,11 +103,11 @@ class FilmService:
             page_number: int,
             page_size: int,
             query: Optional[dict[str, Any]],
-            sort: str) -> List[Optional[Film]]:
-        films: List[Optional[Film]] = []
+            sort: str) -> List[Film]:
+        films: List[Film] = []
         try:
             docs = await self.elastic.search(
-                index="movies",
+                index=settings.es.FILMS_INDEX,
                 query=query,
                 sort=f"{sort[1:]}:desc" if sort.startswith("-") else sort,
                 size=page_size,
@@ -125,7 +125,7 @@ class FilmService:
             page_size: int,
             page_number: int,
             query: str
-    ) -> List[Optional[Film]]:
+    ) -> List[Film]:
         """Получаем список фильмов из Elasticsearch по поисковому запросу."""
 
         query_match = {
@@ -148,7 +148,10 @@ class FilmService:
     async def _get_film_from_elastic(self, film_id: str) -> Optional[Film]:
         """Получаем данные о фильме из Elasticsearch."""
         try:
-            doc = await self.elastic.get(index="movies", id=film_id)
+            doc = await self.elastic.get(
+                index=settings.es.FILMS_INDEX,
+                id=film_id
+            )
         except NotFoundError:
             return None
 
