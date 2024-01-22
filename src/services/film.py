@@ -22,7 +22,7 @@ class FilmService:
             sort: str,
             page_size: int,
             page_number: int,
-            genre: str | None
+            genre: Optional[List[str]]
     ) -> List[Film]:
         """
         Возвращает список фильмов по параметрам.
@@ -79,7 +79,7 @@ class FilmService:
             sort: str,
             page_size: int,
             page_number: int,
-            genre: str | None
+            genre: Optional[List[str]]
     ) -> List[Film]:
         """
         Получает список фильмов из Elasticsearch
@@ -89,10 +89,9 @@ class FilmService:
 
         if genre is not None:
             query_match = {
-                "term": {
-                    "genre": {
-                        "value": genre
-                    }
+                "terms": {
+                    "genre": genre,
+                    "boost": 1.0
                 }
             }
 
