@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Annotated, List, Optional
+from typing import Annotated, Any, List, Optional
 
 from core.config import settings
 from db.elastic import get_elastic
@@ -85,10 +85,10 @@ class FilmService:
         Получает список фильмов из Elasticsearch
         с необязательным фильтром по жанрам.
         """
-        query = None
+        query_match = None
 
         if genre is not None:
-            query = {
+            query_match = {
                 "term": {
                     "genre": {
                         "value": genre
@@ -96,10 +96,15 @@ class FilmService:
                 }
             }
 
-        return await self._elastic_search(page_number, page_size, query, sort)
+        return await self._elastic_search(page_number, page_size, query_match, sort)
 
-    async def _elastic_search(self, page_number, page_size, query, sort):
-        films = []
+    async def _elastic_search(
+            self,
+            page_number: int,
+            page_size: int,
+            query: Optional[dict[str, Any]],
+            sort: str) -> List[Optional[Film]]:
+        films: List[Optional[Film]] = []
         try:
             docs = await self.elastic.search(
                 index="movies",
@@ -109,7 +114,7 @@ class FilmService:
                 from_=((page_number - 1) * page_size),
             )
         except NotFoundError:
-            return []
+            return films
         for doc in docs["hits"]["hits"]:
             films.append(Film(**doc["_source"]))
         return films
@@ -123,7 +128,7 @@ class FilmService:
     ) -> List[Optional[Film]]:
         """Получаем список фильмов из Elasticsearch по поисковому запросу."""
 
-        query = {
+        query_match = {
             "multi_match": {
                 "query": query,
                 "fuzziness": "auto",
@@ -138,7 +143,7 @@ class FilmService:
             }
         }
 
-        return await self._elastic_search(page_number, page_size, query, sort)
+        return await self._elastic_search(page_number, page_size, query_match, sort)
 
     async def _get_film_from_elastic(self, film_id: str) -> Optional[Film]:
         """Получаем данные о фильме из Elasticsearch."""
