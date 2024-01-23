@@ -19,10 +19,10 @@ class FilmService:
 
     async def get_films(
             self, *,
-            sort: List[str],
             page_size: int,
             page_number: int,
-            genre: Optional[List[str]]
+            sort: Optional[List[str]] = None,
+            genre: Optional[List[str]] = None
     ) -> List[Film]:
         """
         Возвращает список фильмов по параметрам.
@@ -30,20 +30,20 @@ class FilmService:
         """
 
         films = await self._get_films_from_elastic(
-            sort=sort,
             page_size=page_size,
             page_number=page_number,
-            genre=genre
+            genre=genre,
+            sort=sort,
         )
 
         return films
 
     async def get_by_search(
             self, *,
-            sort: List[str],
             page_size: int,
             page_number: int,
-            query: str
+            query: str,
+            sort: Optional[List[str]] = None,
     ) -> List[Film]:
         """
         Возвращает список фильмов по поиску.
@@ -76,10 +76,10 @@ class FilmService:
 
     async def _get_films_from_elastic(
             self,
-            sort: List[str],
             page_size: int,
             page_number: int,
-            genre: Optional[List[str]]
+            genre: Optional[List[str]],
+            sort: Optional[List[str]]
     ) -> List[Film]:
         """
         Получает список фильмов из Elasticsearch
@@ -102,15 +102,14 @@ class FilmService:
             page_number: int,
             page_size: int,
             query: Optional[dict[str, Any]],
-            sort: List[str]
+            sort: Optional[List[str]]
     ) -> List[Film]:
         films: List[Film] = []
         try:
             docs = await self.elastic.search(
                 index=settings.es.FILMS_INDEX,
                 query=query,
-                sort=[f"{item[1:]}:desc" if item.startswith("-") else item
-                      for item in sort],
+                sort=await self._get_sort(sort),
                 size=page_size,
                 from_=((page_number - 1) * page_size),
             )
@@ -121,12 +120,19 @@ class FilmService:
             films.append(Film(**doc["_source"]))
         return films
 
+    @staticmethod
+    async def _get_sort(sort):
+        if sort is not None:
+            return [f"{item[1:]}:desc" if item.startswith("-") else item
+                    for item in sort]
+        return sort
+
     async def _get_films_by_search_from_elastic(
             self,
-            sort: List[str],
             page_size: int,
             page_number: int,
-            query: str
+            query: str,
+            sort: Optional[List[str]],
     ) -> List[Film]:
         """Получаем список фильмов из Elasticsearch по поисковому запросу."""
 
