@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel, Field
 
@@ -14,9 +14,9 @@ class Film(BaseModel):
     title: str
     description: str | None = Field("")
 
-    director: List[Optional[str]]
-    actors_names: List[Optional[str]]
-    writers_names: List[Optional[str]]
+    director: List[str]
+    actors_names: List[str]
+    writers_names: List[str]
 
-    actors: List[Optional[FilmPerson]]
-    writers: List[Optional[FilmPerson]]
+    actors: List[FilmPerson]
+    writers: List[FilmPerson]
