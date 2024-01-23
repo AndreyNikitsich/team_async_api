@@ -109,7 +109,7 @@ class FilmService:
             docs = await self.elastic.search(
                 index=settings.es.FILMS_INDEX,
                 query=query,
-                sort=await self._get_sort(sort),
+                sort=self._parse_sort(sort),
                 size=page_size,
                 from_=((page_number - 1) * page_size),
             )
@@ -121,7 +121,7 @@ class FilmService:
         return films
 
     @staticmethod
-    async def _get_sort(sort):
+    def _parse_sort(sort):
         if sort is not None:
             return [f"{item[1:]}:desc" if item.startswith("-") else item
                     for item in sort]
