@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Annotated, Optional
+from typing import Annotated, List, Optional
 
 from core.config import settings
 from fastapi import Depends
@@ -25,7 +25,7 @@ class PersonService:
         if not person:
             person = await self.elastic_service.get_model(
                 model=Person,
-                index=settings.es.FILMS_INDEX,
+                index=settings.es.PERSONS_INDEX,
                 id_=person_id,
             )
             if not person:
@@ -34,7 +34,33 @@ class PersonService:
 
         return person
 
-    async def get_by_search(self, *, query: str, page_size: int, page_number: int) -> list[Person]:
+    async def get_persons(
+            self, *,
+            page_size: int,
+            page_number: int,
+            sort: Optional[List[str]] = None,
+    ) -> List[Person]:
+        """
+        Возвращает список персон по параметрам.
+        Может возвращать пустой список, так как база фильмов может быть пуста.
+        """
+        persons = await self.elastic_service.search_models(
+            model=Person,
+            index=settings.es.PERSONS_INDEX,
+            sort=sort,
+            page_size=page_size,
+            page_number=page_number,
+        )
+
+        return persons
+
+    async def get_by_search(
+            self, *,
+            page_size: int,
+            page_number: int,
+            query: str,
+            sort: Optional[List[str]] = None,
+    ) -> list[Person]:
         """
         Возвращает список персон по поиску.
         Может возвращать пустой список, так как по запросу могут
@@ -59,6 +85,7 @@ class PersonService:
         persons = await self.elastic_service.search_models(
             model=Person,
             index=settings.es.PERSONS_INDEX,
+            sort=sort,
             page_size=page_size,
             page_number=page_number,
             query=query_match
