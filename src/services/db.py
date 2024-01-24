@@ -16,11 +16,12 @@ class ElasticService:
             self,
             model: Type[Model],
             index: str,
-            query: Optional[dict[str, Any]],
-            page_number: Optional[int],
-            page_size: Optional[int],
-            sort: Optional[List[str]]
+            query: Optional[dict[str, Any]] = None,
+            page_number: Optional[int] = None,
+            page_size: Optional[int] = None,
+            sort: Optional[List[str]] = None
     ) -> List[Any]:
+        """Получаем список моделей по поисковому запросу из индекса."""
         models: List[Model] = []
         try:
             docs = await self.elastic.search(
@@ -44,7 +45,7 @@ class ElasticService:
             id_: str,
 
     ) -> Optional[Model]:
-        """Получаем данные о фильме из Elasticsearch."""
+        """Получаем данные о конкретной модели по id из индекса."""
         try:
             doc = await self.elastic.get(
                 index=index,

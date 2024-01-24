@@ -40,3 +40,14 @@ select = [
     "T10",  # flake8-debugger
     "W",  # pycodestyle
 ]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
+
+[tool.mypy]
+python_version = "3.11"
+
+# TODO: remove
+[[tool.mypy.overrides]]
+module = "fake_data.*"
+ignore_errors = true
