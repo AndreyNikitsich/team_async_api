@@ -32,6 +32,7 @@ class RedisSettings(EnvSettings):
 class ElasticSettings(EnvSettings):
     ES_DSN: HttpUrl = Field(default="http://127.0.0.1:9200")
     FILMS_INDEX: str = Field(default="movies")
+    PERSONS_INDEX: str = Field(default="persons")
 
 
 class Settings(BaseSettings):
