@@ -1,11 +1,10 @@
 from functools import lru_cache
-from typing import Optional, Annotated
-from uuid import UUID
-
-from fastapi import Depends
+from typing import Annotated, Optional
 
 from core.config import settings
+from fastapi import Depends
 from models.person import Person
+
 from services.cache import CacheService
 from services.db import ElasticService
 
@@ -49,12 +48,10 @@ class PersonService:
                     "query": query,
                     "fuzziness": "auto",
                     "fields": [
-                        "actors_names",
-                        "writers_names",
-                        "title",
-                        "description",
-                        "genre",
-                        "director"
+                        "name",
+                        "roles",
+                        "films_titles",
+                        "films_descriptions",
                     ]
                 }
             }
