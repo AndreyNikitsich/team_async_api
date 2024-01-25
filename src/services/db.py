@@ -1,9 +1,11 @@
 from typing import Annotated, Any, List, Optional, Type
 
 from db.elastic import get_elastic
-from elasticsearch import AsyncElasticsearch, NotFoundError
+from elasticsearch import AsyncElasticsearch, BadRequestError, NotFoundError
 from fastapi import Depends
 from pydantic import BaseModel as Model
+
+from services import exceptions
 
 
 class ElasticService:
@@ -31,8 +33,17 @@ class ElasticService:
                 size=page_size,
                 from_=self._get_offset(page_number, page_size),
             )
+
         except NotFoundError:
             return models
+
+        except BadRequestError as exp:
+            raise exceptions.BadRequestError(
+                status_code=exp.status_code,
+                message=exp.message,
+                body=exp.body,
+                errors=exp.errors
+            ) from exp
 
         for doc in docs["hits"]["hits"]:
             models.append(model(**doc["_source"]))
@@ -51,8 +62,17 @@ class ElasticService:
                 index=index,
                 id=id_
             )
+
         except NotFoundError:
             return None
+
+        except BadRequestError as exp:
+            raise exceptions.BadRequestError(
+                status_code=exp.status_code,
+                message=exp.message,
+                body=exp.body,
+                errors=exp.errors
+            ) from exp
 
         return model(**doc["_source"])
 
