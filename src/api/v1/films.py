@@ -3,9 +3,10 @@ from http import HTTPStatus
 from typing import Annotated, cast
 from uuid import UUID
 
-from fake_data.services_contracts.film_service import FilmService, get_film_service
+# from fake_data.services_contracts.film_service import FilmService, get_film_service
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
+from services.film import get_film_service, FilmService
 from .dependencies import PaginationParams, get_pagination_params
 from .response_models import FilmBase, FilmInfo
 
@@ -26,10 +27,10 @@ async def get_films(
     film_service: FilmService = Depends(get_film_service),
 ) -> list[FilmBase]:
     films = await film_service.get_films(
-        sorting_fields=cast(list[str], sort),
+        sort=cast(list[str], sort),
         page_size=pagination_params.page_size,
         page_number=pagination_params.page_number,
-        genres=genre,
+        genre=genre,
     )
     response = [FilmBase(uuid=film.id, title=film.title, imdb_rating=film.imdb_rating) for film in films]
     return response
@@ -51,7 +52,7 @@ async def search_film_by_query(
 
 
 @router.get("/films/{film_id}", response_model=FilmInfo, status_code=status.HTTP_200_OK)
-async def get_film_info(film_id: UUID, film_service: FilmService = Depends(get_film_service)) -> FilmInfo:
+async def get_film_info(film_id: str, film_service: FilmService = Depends(get_film_service)) -> FilmInfo:
     film = await film_service.get_by_id(film_id)
     if film is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Film not found")

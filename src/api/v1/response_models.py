@@ -25,7 +25,7 @@ class GenreInfo(GenreBase):
 
 
 class FilmBase(BaseModel):
-    uuid: UUID
+    uuid: UUID | str
     title: str
     imdb_rating: Optional[float]
 
@@ -35,7 +35,7 @@ class PersonsFilm(FilmBase):
 
 
 class FilmInfo(FilmBase):
-    description: str
+    description: str | None
     genre: list[GenreBase]
     actors: list[PersonBase]
     writers: list[PersonBase]
