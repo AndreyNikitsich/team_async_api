@@ -30,7 +30,3 @@ async def get_random_genre_id(connection: Connection, number_of_genres: int | No
 
 async def get_random_person_id(connection: Connection, number_of_people: int | None = None) -> UUID:
     return await _get_random_id_from_table(connection, 'person', number_of=number_of_people)
-
-
-async def get_random_definition_id(connection: Connection, number_of_definitions: int | None = None) -> UUID:
-    return await _get_random_id_from_table(connection, 'definition', number_of=number_of_definitions)
