@@ -1,33 +1,31 @@
 import hashlib
 import json
-from typing import Annotated, Any
+from typing import Any
 
 from core.config import settings
 from db.redis import get_redis
-from fastapi import Depends
-from redis.asyncio import Redis
 
-cache_provider = Annotated[Redis, Depends(get_redis)]
+cache_provider = get_redis
 
 
 class CacheService:
     """Содержит бизнес-логику по работе с кешем."""
 
-    def __init__(self):
-        self.redis = cache_provider()
-
+    @staticmethod
     async def get_cache(self, key: str) -> dict[str, Any] | None:
         """Получаем данные запроса из кеша."""
-        data = await self.redis.get(key)
+        provider = await cache_provider()
+        data = await provider.get(key)
         if not data:
             return None
 
         return json.loads(data.decode("utf-8"))
 
+    @staticmethod
     async def put_cache(self, key: str, data: str):
         """Сохраняем данные запроса в кеше."""
-        await self.redis.set(key, data,
-                             settings.redis.CACHE_EXPIRE_IN_SECONDS)
+        provider = await cache_provider()
+        await provider.set(key, data, settings.redis.CACHE_EXPIRE_IN_SECONDS)
 
 
 class QueryCache(CacheService):
