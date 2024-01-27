@@ -30,3 +30,10 @@
 Утилита для генерации фейковых данных находится в папке `/data/fake_data_generator`
 
 Дополнительная информация в файле [README.md](./fake_data_generator/README.md)
+
+## Разработка индексов elasticsearch
+
+Содержит описание индексов и скрипты инициализации.
+
+Подробности в файле [README.md](./elasticsearch/README.md)
+
