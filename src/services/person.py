@@ -1,65 +1,61 @@
 from functools import lru_cache
-from typing import Annotated, List, Optional
+from typing import Annotated
 
 from core.config import settings
 from fastapi import Depends
 from models.person import Person
 
-from services.cache import CacheService
 from services.db import ElasticService
 
 
 class PersonService:
     """Содержит бизнес-логику по работе с персонами."""
 
-    def __init__(self, cache_service: CacheService, elastic_service: ElasticService):
-        self.cache_service = cache_service
+    def __init__(self, elastic_service: ElasticService):
         self.elastic_service = elastic_service
 
-    async def get_by_id(self, person_id: str) -> Optional[Person]:
+    async def get_by_id(self, person_id: str) -> Person | None:
         """
         Возвращает объект персоны по id (uuid).
         Он опционален, так как персона может отсутствовать в базе.
         """
-        person = await self.cache_service.get_model_cache(person_id, Person)
-        if not person:
-            person = await self.elastic_service.get_model(
-                model=Person,
-                index=settings.es.PERSONS_INDEX,
-                id_=person_id,
-            )
-            if not person:
-                return None
-            await self.cache_service.put_model_cache(person_id, person)
+        data = await self.elastic_service.get_model(
+            index=settings.es.PERSONS_INDEX,
+            model_id=person_id
+        )
+        if not data:
+            return None
 
-        return person
+        return Person(**data)
 
     async def get_persons(
             self, *,
             page_size: int,
             page_number: int,
-            sort: Optional[List[str]] = None,
-    ) -> List[Person]:
+            sort: list[str] | None = None,
+    ) -> list[Person]:
         """
         Возвращает список персон по параметрам.
         Может возвращать пустой список, так как база фильмов может быть пуста.
         """
-        persons = await self.elastic_service.search_models(
-            model=Person,
+        data = await self.elastic_service.search_models(
             index=settings.es.PERSONS_INDEX,
-            sort=sort,
-            page_size=page_size,
             page_number=page_number,
+            page_size=page_size,
+            sort=sort
         )
 
-        return persons
+        if not data:
+            return []
+
+        return [Person(**row) for row in data]
 
     async def get_by_search(
             self, *,
             page_size: int,
             page_number: int,
             query: str,
-            sort: Optional[List[str]] = None,
+            sort: list[str] | None = None,
     ) -> list[Person]:
         """
         Возвращает список персон по поиску.
@@ -82,21 +78,24 @@ class PersonService:
                 }
             }
 
-        persons = await self.elastic_service.search_models(
-            model=Person,
+        data = await self.elastic_service.search_models(
             index=settings.es.PERSONS_INDEX,
-            sort=sort,
-            page_size=page_size,
+            query=query_match,
             page_number=page_number,
-            query=query_match
+            page_size=page_size,
+            sort=sort
         )
+
+        if not data:
+            return []
+
+        persons = [Person(**row) for row in data]
 
         return persons
 
 
 @lru_cache()
 def get_person_service(
-        cache_service: Annotated[CacheService, Depends()],
         db_service: Annotated[ElasticService, Depends()],
 ) -> PersonService:
-    return PersonService(cache_service, db_service)
+    return PersonService(db_service)

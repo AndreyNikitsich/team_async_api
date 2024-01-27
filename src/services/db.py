@@ -1,11 +1,11 @@
-from typing import Annotated, Any, List, Optional, Type
+from typing import Annotated, Any
 
 from db.elastic import get_elastic
 from elasticsearch import AsyncElasticsearch, BadRequestError, NotFoundError
 from fastapi import Depends
-from pydantic import BaseModel as Model
 
 from services import exceptions
+from services.cache import ModelCache, QueryCache
 
 
 class ElasticService:
@@ -14,17 +14,44 @@ class ElasticService:
     def __init__(self, elastic: Annotated[AsyncElasticsearch, Depends(get_elastic)]):
         self.elastic = elastic
 
-    async def search_models(
-            self,
-            model: Type[Model],
+    @ModelCache(key="model_id")
+    async def get_model(
+            self, *,
             index: str,
-            query: Optional[dict[str, Any]] = None,
-            page_number: Optional[int] = None,
-            page_size: Optional[int] = None,
-            sort: Optional[List[str]] = None
-    ) -> List[Any]:
+            model_id: str
+    ) -> dict[str, Any] | None:
+        return await self._get_model(
+            index=index,
+            id_=model_id,
+        )
+
+    @QueryCache()
+    async def search_models(
+            self, *,
+            index: str,
+            page_number: int,
+            page_size: int,
+            query_match: dict[str, Any] | None,
+            sort: list[str] | None
+    ) -> list[dict[str, Any]] | None:
+        return await self._search_models(
+            index=index,
+            query=query_match,
+            page_number=page_number,
+            page_size=page_size,
+            sort=sort
+        )
+
+    async def _search_models(
+            self,
+            index: str,
+            query: dict[str, Any] | None = None,
+            page_number: int | None = None,
+            page_size: int | None = None,
+            sort: list[str] | None = None
+    ) -> list[dict[str, Any]] | None:
         """Получаем список моделей по поисковому запросу из индекса."""
-        models: List[Model] = []
+        result: list[dict[str, Any]] = []
         try:
             docs = await self.elastic.search(
                 index=index,
@@ -32,35 +59,6 @@ class ElasticService:
                 sort=self._parse_sort(sort),
                 size=page_size,
                 from_=self._get_offset(page_number, page_size),
-            )
-
-        except NotFoundError:
-            return models
-
-        except BadRequestError as exp:
-            raise exceptions.BadRequestError(
-                status_code=exp.status_code,
-                message=exp.message,
-                body=exp.body,
-                errors=exp.errors
-            ) from exp
-
-        for doc in docs["hits"]["hits"]:
-            models.append(model(**doc["_source"]))
-        return models
-
-    async def get_model(
-            self,
-            model: Type[Model],
-            index: str,
-            id_: str,
-
-    ) -> Optional[Model]:
-        """Получаем данные о конкретной модели по id из индекса."""
-        try:
-            doc = await self.elastic.get(
-                index=index,
-                id=id_
             )
 
         except NotFoundError:
@@ -74,20 +72,40 @@ class ElasticService:
                 errors=exp.errors
             ) from exp
 
-        return model(**doc["_source"])
+        for doc in docs["hits"]["hits"]:
+            result.append(doc["_source"])
+        return result
+
+    async def _get_model(self, index: str, id_: str) -> dict[str, Any] | None:
+        """Получаем данные о конкретной модели по id из индекса."""
+        try:
+            doc = await self.elastic.get(index=index, id=id_)
+
+        except NotFoundError:
+            return None
+
+        except BadRequestError as exp:
+            raise exceptions.BadRequestError(
+                status_code=exp.status_code,
+                message=exp.message,
+                body=exp.body,
+                errors=exp.errors
+            ) from exp
+
+        return doc["_source"]
 
     @staticmethod
     def _get_offset(
-            page_number: Optional[int],
-            page_size: Optional[int]
-    ) -> Optional[int]:
+            page_number: int | None,
+            page_size: int | None
+    ) -> int | None:
         if page_number is not None and page_size is not None:
             return (page_number - 1) * page_size
 
         return None
 
     @staticmethod
-    def _parse_sort(sort: Optional[List[str]]) -> Optional[List[str]]:
+    def _parse_sort(sort: list[str] | None) -> list[str] | None:
         if sort is not None:
             return [f"{item[1:]}:desc" if item.startswith("-") else item
                     for item in sort]
