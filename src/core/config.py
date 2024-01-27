@@ -30,7 +30,9 @@ class RedisSettings(EnvSettings):
 
 
 class ElasticSettings(EnvSettings):
-    ES_DSN: HttpUrl = Field(default="http://127.0.0.1:9200")
+    ES_SCHEMA: str = Field(default="http")
+    ES_HOST: str = Field(default="127.0.0.1")
+    ES_PORT: int = Field(default=9200)
     FILMS_INDEX: str = Field(default="movies")
     PERSONS_INDEX: str = Field(default="persons")
     GENRE_INDEX: str = Field(default="genres")
