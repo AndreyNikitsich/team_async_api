@@ -4,119 +4,29 @@
 
 1. [Техническое задание](./docs/tz.md)
 2. [Анализ технического задания](./docs/tz_analiz.md)
-3. [Уточняющие вопросы по ТЗ](./docs/tz_questions.md)
+3. [Уточняющие вопросы по ТЗ](./docs/tz_questions.md) 
 
-## Предварительная структура данных
+## Полная схема базы данных
 
-```sql
--- CREATE MOVIES DATABASE SCRIPT
+Содержит поля согласно переданному макету. Оставлено для будущего использования.
+Скрипты создания/уничтожения таблиц находятся в папке `/data/postgres_full`
 
-CREATE SCHEMA IF NOT EXISTS content;
+Дополнительная информация в файле [README.md](./postgres_full/README.md)
 
-ALTER ROLE app SET search_path TO content, public;
+## Генерация (полных) фейковых данных
 
-CREATE TABLE IF NOT EXISTS content.film (
-  id uuid PRIMARY KEY,
-  title VARCHAR (255) NOT NULL,
-  imdb_rating FLOAT,
-  mpaa_rating VARCHAR (5) NOT NULL,
-  accessibility_features VARCHAR (5) [] NOT NULL DEFAULT '{}'::VARCHAR (5) [],
-  duration_settings INT NOT NULL,
-  release_date TIMESTAMP WITH TIME ZONE,
-  description TEXT NOT NULL,
+Утилита для генерации фейковых данных находится в папке `/data/fake_full_data_generator`
 
-  created TIMESTAMP WITH TIME ZONE,
-  modified TIMESTAMP WITH TIME ZONE
-);
+Дополнительная информация в файле [README.md](./fake_full_data_generator/README.md)
 
-CREATE TABLE IF NOT EXISTS content.genre (
-  id uuid PRIMARY KEY,
-  name VARCHAR (255) NOT NULL,
-  description TEXT NOT NULL,
+## Упрощенная (рабочая) схема базы данных
 
-  created TIMESTAMP WITH TIME ZONE,
-  modified TIMESTAMP WITH TIME ZONE
-);
+Содержит поля согласно переданным данным. Скрипты создания/уничтожения таблиц находятся в папке `/data/postgres`
 
-CREATE TABLE IF NOT EXISTS content.genre_film (
-  id uuid PRIMARY KEY,
-  genre_id uuid NOT NULL,
-  film_id uuid NOT NULL,
+Дополнительная информация в файле [README.md](./postgres/README.md)
 
-  created TIMESTAMP WITH TIME ZONE,
+## Генерация упрощенных (рабочих) фейковых данных
 
-  CONSTRAINT fk_genre_id
-    FOREIGN KEY (genre_id)
-    REFERENCES content.genre (id)
-    ON DELETE CASCADE,
+Утилита для генерации фейковых данных находится в папке `/data/fake_data_generator`
 
-  CONSTRAINT fk_film_id
-    FOREIGN KEY (film_id)
-    REFERENCES content.film (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS content.cover (
-  id uuid PRIMARY KEY,
-  film_id uuid REFERENCES content.film (id) ON DELETE CASCADE,
-  size VARCHAR (16) NOT NULL,
-  url VARCHAR (256) NOT NULL,
-
-  created TIMESTAMP WITH TIME ZONE,
-  modified TIMESTAMP WITH TIME ZONE
-);
-
-CREATE TABLE IF NOT EXISTS content.definition (
-  id uuid PRIMARY KEY,
-  name VARCHAR (256) UNIQUE NOT NULL,
-
-  created TIMESTAMP WITH TIME ZONE,
-  modified TIMESTAMP WITH TIME ZONE
-);
-
-CREATE TABLE IF NOT EXISTS content.definition_film (
-  id uuid PRIMARY KEY,
-  definition_id uuid NOT NULL,
-  film_id uuid NOT NULL,
-
-  created TIMESTAMP WITH TIME ZONE,
-
-  CONSTRAINT fk_definition_id
-    FOREIGN KEY (definition_id)
-    REFERENCES content.definition (id)
-    ON DELETE CASCADE,
-
-  CONSTRAINT fk_film_id
-    FOREIGN KEY (film_id)
-    REFERENCES content.film (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS content.person (
-  id uuid PRIMARY KEY,
-  full_name VARCHAR(256),
-
-  created TIMESTAMP WITH TIME ZONE,
-  modified TIMESTAMP WITH TIME ZONE
-);
-
-CREATE TABLE IF NOT EXISTS content.person_film (
-  id uuid PRIMARY KEY,
-  person_id uuid NOT NULL,
-  film_id uuid NOT NULL,
-  role VARCHAR (64) NOT NULL,
-
-  created TIMESTAMP WITH TIME ZONE,
-  modified TIMESTAMP WITH TIME ZONE,
-
-  CONSTRAINT fk_person_id
-    FOREIGN KEY (person_id)
-    REFERENCES content.person (id)
-    ON DELETE CASCADE,
-
-  CONSTRAINT fk_film_id
-    FOREIGN KEY (film_id)
-    REFERENCES content.film (id)
-    ON DELETE CASCADE
-);
-```
+Дополнительная информация в файле [README.md](./fake_data_generator/README.md)
