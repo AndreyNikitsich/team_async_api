@@ -6,7 +6,7 @@ from services import exceptions
 from services.person import PersonService, get_person_service
 
 from .dependencies import PaginationParams, get_pagination_params
-from .response_models import BasePersonResponse, DetailPersonResponse
+from .response_models import BasePersonResponse, DetailPersonResponse, PersonsFilmResponse
 
 router = APIRouter(prefix="/persons", tags=["persons"])
 
@@ -34,26 +34,27 @@ async def get_person_info(
     )
 
 
-# @router.get("/{person_id}/films", response_model=list[PersonsFilmResponse], status_code=status.HTTP_200_OK)
-# async def get_films_for_person(
-#     person_id: UUID,
-#     pagination_params: PaginationParams = Depends(get_pagination_params),
-#     film_service: FilmService = Depends(get_film_service),
-# ) -> list[PersonsFilmResponse]:
-#     films = await film_service.get_films_for_person(
-#         person_id=person_id,
-#         page_size=pagination_params.page_size,
-#         page_number=pagination_params.page_number,
-#     )
-#     response = [
-#         PersonsFilmResponse(
-#         uuid=film.id,
-#         title=film.title,
-#         imdb_rating=film.imdb_rating,
-#         roles=film.roles)
-#         for film in films
-#     ]
-#     return response
+@router.get(
+    "/{person_id}/films",
+    summary="Получить список фильмов, в которых персона принимала участие",
+    response_model=list[PersonsFilmResponse],
+    status_code=status.HTTP_200_OK,
+)
+async def get_films_for_person(
+    person_id: str,
+    pagination_params: PaginationParams = Depends(get_pagination_params),
+    person_service: PersonService = Depends(get_person_service),
+) -> list[PersonsFilmResponse]:
+    persons_with_films = await person_service.get_films_for_person(
+        person_id=person_id,
+        page_size=pagination_params.page_size,
+        page_number=pagination_params.page_number,
+    )
+    response = [
+        PersonsFilmResponse(uuid=person.id, title=person.title, imdb_rating=person.imdb_rating, roles=person.roles)
+        for person in persons_with_films
+    ]
+    return response
 
 
 @router.get(
