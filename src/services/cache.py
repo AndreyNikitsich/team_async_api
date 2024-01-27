@@ -12,7 +12,7 @@ class CacheService:
     """Содержит бизнес-логику по работе с кешем."""
 
     @staticmethod
-    async def get_cache(self, key: str) -> dict[str, Any] | None:
+    async def get_cache(key: str) -> dict[str, Any] | None:
         """Получаем данные запроса из кеша."""
         provider = await cache_provider()
         data = await provider.get(key)
@@ -22,7 +22,7 @@ class CacheService:
         return json.loads(data.decode("utf-8"))
 
     @staticmethod
-    async def put_cache(self, key: str, data: str):
+    async def put_cache(key: str, data: str):
         """Сохраняем данные запроса в кеше."""
         provider = await cache_provider()
         await provider.set(key, data, settings.redis.CACHE_EXPIRE_IN_SECONDS)
