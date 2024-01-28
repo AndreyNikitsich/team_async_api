@@ -4,6 +4,31 @@
 
 ## Индексы
 
+
+### `/movies`
+> Индекс из предыдущего спринта [movies.json](./indexes/movies.json)
+
+* id: keyword
+* imdb_rating: float
+* genres_names: keyword
+* genres: objects list
+  * id
+  * name
+* title: keyword
+* description: text
+* directors_names: keyword
+* directors: objects list
+  * id
+  * name
+* actors_names: keywords
+* actors: objects list
+  * id
+  * name
+* writer_names: keywords
+* writers: objects list
+  * id
+  * name
+
 ### `/films`
 
 * id: keyword
@@ -29,12 +54,17 @@
 * name: text
 * description: text
 
-### `/people`
+### `/peoples`
 
 * id: keyword
 * full_name: text
 * roles: text
+* films : object list
+  * id : keyword
+  * title : text
+  * roles : keyword
 
+    
 ## Добавление данных
 
 ### Добавление индекса
