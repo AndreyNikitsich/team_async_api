@@ -58,7 +58,6 @@
 
 * id: keyword
 * full_name: text
-* roles: text
 * films : object list
   * id : keyword
   * title : text
