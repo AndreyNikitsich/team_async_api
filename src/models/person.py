@@ -1,15 +1,14 @@
 from typing import List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class PersonFilm(BaseModel):
     id: str
     title: str
-    description: str | None = Field("")
+    roles: List[str]
 
 
 class Person(BaseModel):
     id: str
-    name: str
-    roles: List[str]
+    full_name: str

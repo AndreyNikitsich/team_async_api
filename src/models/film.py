@@ -3,6 +3,11 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
+class FilmGenres(BaseModel):
+    id: str
+    name: str
+
+
 class FilmPerson(BaseModel):
     id: str
     name: str
@@ -14,9 +19,14 @@ class Film(BaseModel):
     title: str
     description: str | None = Field("")
 
-    director: List[str]
-    actors_names: List[str]
-    writers_names: List[str]
+    genres: List[FilmGenres]
+    genres_names: List[str]
+
+    directors: List[FilmPerson]
+    directors_names: List[str]
 
     actors: List[FilmPerson]
+    actors_names: List[str]
+
     writers: List[FilmPerson]
+    writers_names: List[str]

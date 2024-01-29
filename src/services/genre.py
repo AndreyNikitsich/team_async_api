@@ -59,8 +59,7 @@ class GenreService:
                     "fuzziness": "auto",
                     "fields": [
                         "name",
-                        "films_titles",
-                        "films_descriptions",
+                        "descriptions",
                     ]
                 }
             }

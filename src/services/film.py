@@ -30,7 +30,7 @@ class FilmService:
         if genre is not None:
             query_match = {
                 "terms": {
-                    "genre": genre,
+                    "genres_names": genre,
                     "boost": 1.0
                 }
             }
@@ -74,8 +74,8 @@ class FilmService:
                         "writers_names",
                         "title",
                         "description",
-                        "genre",
-                        "director"
+                        "genres_names",
+                        "directors_names"
                     ]
                 }
             }

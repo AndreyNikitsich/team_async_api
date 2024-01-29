@@ -70,10 +70,7 @@ class PersonService:
                     "query": query,
                     "fuzziness": "auto",
                     "fields": [
-                        "name",
-                        "roles",
-                        "films_titles",
-                        "films_descriptions",
+                        "full_name",
                     ]
                 }
             }
