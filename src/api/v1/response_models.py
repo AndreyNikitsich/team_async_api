@@ -1,42 +1,37 @@
-from typing import Optional
-from uuid import UUID
-
 from pydantic import BaseModel
 
 
-class PersonBase(BaseModel):
-    uuid: UUID
+class BasePersonResponse(BaseModel):
+    uuid: str
     full_name: str
 
 
-class PersonInfo(PersonBase):
-    # may add some extra info
+class DetailPersonResponse(BasePersonResponse):
     pass
 
 
-class GenreBase(BaseModel):
-    uuid: UUID
+class BaseGenreResponse(BaseModel):
+    uuid: str
     name: str
 
 
-class GenreInfo(GenreBase):
-    # may add description, etc.
+class DetailGenreResponse(BaseGenreResponse):
     pass
 
 
-class FilmBase(BaseModel):
-    uuid: UUID
+class BaseFilmResponse(BaseModel):
+    uuid: str
     title: str
-    imdb_rating: Optional[float]
+    imdb_rating: float | None
 
 
-class PersonsFilm(FilmBase):
+class PersonsFilmResponse(BaseFilmResponse):
     roles: list[str]
 
 
-class FilmInfo(FilmBase):
+class DetailFilmResponse(BaseFilmResponse):
     description: str
-    genre: list[GenreBase]
-    actors: list[PersonBase]
-    writers: list[PersonBase]
-    directors: list[PersonBase]
+    genres: list[BaseGenreResponse]
+    actors: list[BasePersonResponse]
+    writers: list[BasePersonResponse]
+    directors: list[BasePersonResponse]

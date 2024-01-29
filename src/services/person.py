@@ -19,10 +19,7 @@ class PersonService:
         Возвращает объект персоны по id (uuid).
         Он опционален, так как персона может отсутствовать в базе.
         """
-        data = await self.elastic_service.get_model(
-            index=settings.es.PERSONS_INDEX,
-            model_id=person_id
-        )
+        data = await self.elastic_service.get_model(index=settings.es.PERSONS_INDEX, model_id=person_id)
         if not data:
             return None
 
@@ -80,20 +77,18 @@ class PersonService:
         return films
 
     async def get_persons(
-            self, *,
-            page_size: int,
-            page_number: int,
-            sort: list[str] | None = None,
+        self,
+        *,
+        page_size: int,
+        page_number: int,
+        sort: list[str] | None = None,
     ) -> list[Person]:
         """
         Возвращает список персон по параметрам.
         Может возвращать пустой список, так как база фильмов может быть пуста.
         """
         data = await self.elastic_service.search_models(
-            index=settings.es.PERSONS_INDEX,
-            page_number=page_number,
-            page_size=page_size,
-            sort=sort
+            index=settings.es.PERSONS_INDEX, page_number=page_number, page_size=page_size, sort=sort
         )
 
         if not data:
@@ -102,11 +97,12 @@ class PersonService:
         return [Person(**row["_source"]) for row in data]
 
     async def get_by_search(
-            self, *,
-            page_size: int,
-            page_number: int,
-            query: str,
-            sort: list[str] | None = None,
+        self,
+        *,
+        page_size: int,
+        page_number: int,
+        query: str,
+        sort: list[str] | None = None,
     ) -> list[Person]:
         """
         Возвращает список персон по поиску.
@@ -122,16 +118,12 @@ class PersonService:
                     "fuzziness": "auto",
                     "fields": [
                         "full_name",
-                    ]
+                    ],
                 }
             }
 
         data = await self.elastic_service.search_models(
-            index=settings.es.PERSONS_INDEX,
-            query=query_match,
-            page_number=page_number,
-            page_size=page_size,
-            sort=sort
+            index=settings.es.PERSONS_INDEX, query=query_match, page_number=page_number, page_size=page_size, sort=sort
         )
 
         if not data:
@@ -144,6 +136,6 @@ class PersonService:
 
 @lru_cache()
 def get_person_service(
-        db_service: Annotated[ElasticService, Depends()],
+    db_service: Annotated[ElasticService, Depends()],
 ) -> PersonService:
     return PersonService(db_service)

@@ -53,7 +53,7 @@ class QueryCache(CacheService):
 class ModelCache(CacheService):
     """Декоратор, кеширует данные модели при запросах к базе данных."""
 
-    def __init__(self, *, key: str | None = None):
+    def __init__(self, *, key: str = ""):
         super().__init__()
         self.key = key
 

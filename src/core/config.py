@@ -1,7 +1,7 @@
 import os
 from logging import config as logging_config
 
-from pydantic import Field, HttpUrl
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .logger import LOGGING
