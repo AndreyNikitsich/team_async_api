@@ -40,17 +40,13 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
-      #----------------------------------------------
-      # install your root project, if required
-      #----------------------------------------------
-      - name: Install project
-        run: poetry install --no-interaction
+        run: cd src && poetry install --no-interaction --no-root
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
-      - name: Run tests
+      - name: Run linting
         run: |
+          cd src
           source .venv/bin/activate
-          ruff check src/
-          mypy src/
+          ruff check .
+          mypy .
