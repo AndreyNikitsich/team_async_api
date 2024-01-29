@@ -1,9 +1,10 @@
 from http import HTTPStatus
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, status
+
 from fake_data.services_contracts.film_service import FilmService, get_film_service
 from fake_data.services_contracts.person_service import PersonService, get_person_service
-from fastapi import APIRouter, Depends, HTTPException, status
 
 from .dependencies import PaginationParams, get_pagination_params
 from .response_models import PersonBase, PersonInfo, PersonsFilm

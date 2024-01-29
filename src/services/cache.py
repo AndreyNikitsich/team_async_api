@@ -2,10 +2,11 @@ import hashlib
 import json
 from typing import Annotated, Any
 
-from core.config import settings
-from db.redis import get_redis
 from fastapi import Depends
 from redis.asyncio import Redis
+
+from core.config import settings
+from db.redis import get_redis
 
 cache_provider = Annotated[Redis, Depends(get_redis)]
 

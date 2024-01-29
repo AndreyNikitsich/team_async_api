@@ -1,8 +1,9 @@
 from http import HTTPStatus
 from uuid import UUID
 
-from fake_data.services_contracts.genre_service import GenreService, get_genre_service
 from fastapi import APIRouter, Depends, HTTPException, status
+
+from fake_data.services_contracts.genre_service import GenreService, get_genre_service
 
 from .response_models import GenreBase, GenreInfo
 

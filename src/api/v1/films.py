@@ -3,8 +3,9 @@ from http import HTTPStatus
 from typing import Annotated, cast
 from uuid import UUID
 
-from fake_data.services_contracts.film_service import FilmService, get_film_service
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+
+from fake_data.services_contracts.film_service import FilmService, get_film_service
 
 from .dependencies import PaginationParams, get_pagination_params
 from .response_models import FilmBase, FilmInfo
