@@ -46,7 +46,7 @@ class FilmService:
         if not data:
             return []
 
-        films = [Film(**row) for row in data]
+        films = [Film(**row["_source"]) for row in data]
 
         return films
 
@@ -91,7 +91,7 @@ class FilmService:
         if not data:
             return []
 
-        films = [Film(**row) for row in data]
+        films = [Film(**row["_source"]) for row in data]
 
         return films
 
