@@ -1,9 +1,9 @@
 from typing import Annotated, Any
 
-from db.elastic import get_elastic
 from elasticsearch import AsyncElasticsearch, BadRequestError, NotFoundError
 from fastapi import Depends
 
+from db.elastic import get_elastic
 from services import exceptions
 from services.cache import ModelCache, QueryCache
 

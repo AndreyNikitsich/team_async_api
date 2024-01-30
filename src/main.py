@@ -1,7 +1,8 @@
 import uvicorn
+from fastapi import FastAPI
+
 from api import router as api_router
 from core.config import settings
-from fastapi import FastAPI
 
 app = FastAPI(
     title=settings.swagger.PROJECT_NAME, docs_url=settings.swagger.DOCS_URL, openapi_url=settings.swagger.OPENAPI_URL
