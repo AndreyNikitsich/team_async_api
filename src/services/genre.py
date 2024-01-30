@@ -34,7 +34,7 @@ class GenreService:
         if not data:
             return []
 
-        genres = [Genre(**row) for row in data]
+        genres = [Genre(**row["_source"]) for row in data]
 
         return genres
 
@@ -75,7 +75,7 @@ class GenreService:
         if not data:
             return []
 
-        genres = [Genre(**row) for row in data]
+        genres = [Genre(**row["_source"]) for row in data]
 
         return genres
 

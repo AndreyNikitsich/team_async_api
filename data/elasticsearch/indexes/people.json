@@ -49,19 +49,22 @@
       },
       "full_name": {
         "type": "text",
-        "analyzer": "ru_en",
-        "fields": {
-          "raw": {
-            "type": "keyword"
-          }
-        }
+        "analyzer": "ru_en"
       },
-      "roles": {
-        "type": "text",
-        "analyzer": "ru_en",
-        "fields": {
-          "raw": {
+      "films" : {
+        "type": "nested",
+        "dynamic": "strict",
+        "properties": {
+          "id": {
             "type": "keyword"
+          },
+          "title": {
+            "type": "text",
+            "analyzer": "ru_en"
+          },
+          "roles": {
+            "type": "text",
+            "analyzer": "ru_en"
           }
         }
       }

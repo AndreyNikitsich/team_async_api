@@ -3,7 +3,7 @@ from typing import Annotated
 
 from core.config import settings
 from fastapi import Depends
-from models.person import Person
+from models.person import Person, PersonFilm
 
 from services.db import ElasticService
 
@@ -28,6 +28,57 @@ class PersonService:
 
         return Person(**data)
 
+    async def get_films_for_person(
+            self, *,
+            person_id: str,
+            page_size: int,
+            page_number: int,
+            sort: list[str] | None = None,
+    ) -> list[PersonFilm]:
+        """
+        Возвращает список фильмов у персоны.
+        """
+        query_match = {
+            "bool": {
+                "must": {
+                    "term": {"id": person_id}
+                },
+                "filter": {
+                    "nested": {
+                        "path": "films",
+                        "query": {
+                            "match_all": {}
+                        },
+                        "inner_hits": {
+                            "size": page_size,
+                            "from": page_number
+                        }
+                    }
+                }
+            }
+        }
+
+        data = await self.elastic_service.search_models(
+            index=settings.es.PERSONS_INDEX,
+            query=query_match,
+            page_number=page_number,
+            page_size=page_size,
+            sort=sort,
+            inner_hits=True
+        )
+
+        if not data:
+            return []
+
+        data_films = [row["inner_hits"]["films"]["hits"]["hits"] for row in data]
+
+        if not data_films:
+            return []
+
+        films = [PersonFilm(**row["_source"]) for row in data_films]
+
+        return films
+
     async def get_persons(
             self, *,
             page_size: int,
@@ -48,7 +99,7 @@ class PersonService:
         if not data:
             return []
 
-        return [Person(**row) for row in data]
+        return [Person(**row["_source"]) for row in data]
 
     async def get_by_search(
             self, *,
@@ -86,7 +137,7 @@ class PersonService:
         if not data:
             return []
 
-        persons = [Person(**row) for row in data]
+        persons = [Person(**row["_source"]) for row in data]
 
         return persons
 

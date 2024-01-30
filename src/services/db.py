@@ -50,8 +50,7 @@ class ElasticService:
             page_size: int | None = None,
             sort: list[str] | None = None
     ) -> list[dict[str, Any]] | None:
-        """Получаем список моделей по поисковому запросу из индекса."""
-        result: list[dict[str, Any]] = []
+        """Получаем список хитов по поисковому запросу из индекса."""
         try:
             docs = await self.elastic.search(
                 index=index,
@@ -72,9 +71,7 @@ class ElasticService:
                 errors=exp.errors
             ) from exp
 
-        for doc in docs["hits"]["hits"]:
-            result.append(doc["_source"])
-        return result
+        return docs["hits"]["hits"]
 
     async def _get_model(self, index: str, id_: str) -> dict[str, Any] | None:
         """Получаем данные о конкретной модели по id из индекса."""
