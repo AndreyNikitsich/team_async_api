@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  elastic:
+    build: ./data/elasticsearch
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms200m -Xmx200m
+    expose:
+      - 9200
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9200" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - backend
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - rd_data:/data
+    expose:
+      - 6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 1s
+      timeout: 2s
+      retries: 5
+    networks:
+      - backend
+
+  api:
+    build: ./
+    container_name: movies_api
+    env_file:
+      - ./src/.env
+    depends_on:
+      redis:
+        condition: service_healthy
+      elastic:
+        condition: service_healthy
+    expose:
+      - 8000
+    networks:
+      - frontend
+      - backend
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "8000:80"
+    depends_on:
+      - api
+    networks:
+      - frontend
+
+volumes:
+  rd_data:
+  es_data:
+
+networks:
+  frontend:
+    name: frontend
+  backend:
+    name: backend
