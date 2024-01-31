@@ -15,11 +15,7 @@ class FilmService:
         self.elastic_service = elastic_service
 
     async def get_films(
-            self, *,
-            page_size: int,
-            page_number: int,
-            sort: list[str] | None = None,
-            genre: list[str] | None = None
+        self, *, page_size: int, page_number: int, sort: list[str] | None = None, genre: list[str] | None = None
     ) -> list[Film]:
         """
         Возвращает список фильмов по параметрам.
@@ -28,19 +24,14 @@ class FilmService:
         query_match = None
 
         if genre is not None:
-            query_match = {
-                "terms": {
-                    "genres_names": genre,
-                    "boost": 1.0
-                }
-            }
+            query_match = {"terms": {"genres_names": genre, "boost": 1.0}}
 
         data = await self.elastic_service.search_models(
             index=settings.es.FILMS_INDEX,
             page_number=page_number,
             page_size=page_size,
             query_match=query_match,
-            sort=sort
+            sort=sort,
         )
 
         if not data:
@@ -51,11 +42,12 @@ class FilmService:
         return films
 
     async def get_by_search(
-            self, *,
-            page_size: int,
-            page_number: int,
-            query: str,
-            sort: list[str] | None = None,
+        self,
+        *,
+        page_size: int,
+        page_number: int,
+        query: str,
+        sort: list[str] | None = None,
     ) -> list[Film]:
         """
         Возвращает список фильмов по поиску.
@@ -75,8 +67,8 @@ class FilmService:
                         "title",
                         "description",
                         "genres_names",
-                        "directors_names"
-                    ]
+                        "directors_names",
+                    ],
                 }
             }
 
@@ -85,7 +77,7 @@ class FilmService:
             page_number=page_number,
             page_size=page_size,
             query_match=query_match,
-            sort=sort
+            sort=sort,
         )
 
         if not data:
@@ -100,10 +92,7 @@ class FilmService:
         Возвращает объект фильма по id (uuid).
         Он опционален, так как фильм может отсутствовать в базе.
         """
-        data = await self.elastic_service.get_model(
-            index=settings.es.FILMS_INDEX,
-            model_id=film_id
-        )
+        data = await self.elastic_service.get_model(index=settings.es.FILMS_INDEX, model_id=film_id)
         if not data:
             return None
 
@@ -112,7 +101,7 @@ class FilmService:
 
 @lru_cache()
 def get_film_service(
-        db_service: Annotated[ElasticService, Depends()],
+    db_service: Annotated[ElasticService, Depends()],
 ) -> FilmService:
     """Провайдер FilmService."""
     return FilmService(db_service)

@@ -5,11 +5,11 @@ class ServiceError(Exception):
     """Base-class for clients that raise errors."""
 
     def __init__(
-            self,
-            message: str,
-            status_code: int,
-            body: Any,
-            errors: Tuple[Exception, ...] = (),
+        self,
+        message: str,
+        status_code: int,
+        body: Any,
+        errors: Tuple[Exception, ...] = (),
     ):
         super().__init__(message)
         self.message = message
