@@ -1,16 +1,20 @@
-version: "3"
+version: "3.8"
 services:
   nginx:
-    build:
-      context: nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/configs:/etc/nginx/conf.d:ro
     ports:
-      - "80:80"
+      - "8000:80"
     depends_on:
       - backend
 
   backend:
     build:
-      context: src
+      context: ./src
+    env_file:
+      - ./.env
     expose:
       - 8000
     depends_on:
@@ -18,30 +22,43 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    env_file: .env
 
-  postgres:
-    build:
-      context: data/postgres
-    expose:
-      - 5432
-    environment:
-      POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+#  postgres:
+#    image: postgres:13.3-alpine
+#    expose:
+#      - 5432
+#    env_file:
+#      - ./.env
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U movies_database -d movies_database" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#    volumes:
+#      - pg_data:/var/lib/postgresql/data
+#      - ./data/postgres/schema_design:/docker-entrypoint-initdb.d
+##      - здесь надо создать папку schema_design и положить туда create_tables.sql
 
   elastic:
     build:
-      context: data/elasticsearch
+      context: ./data/elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms200m -Xmx200m
     expose:
       - 9200
     healthcheck:
       test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:9200/
       interval: 10s
       retries: 80
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
 
   redis:
     image: redis:7.2.0
+    volumes:
+      - rd_data:/data
     expose:
       - 6379
     healthcheck:
@@ -50,6 +67,7 @@ services:
       timeout: 2s
       retries: 5
 
-networks:
-  default:
-      name: movies
+volumes:
+  rd_data:
+  es_data:
+#  pg_data:
