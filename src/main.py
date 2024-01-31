@@ -1,12 +1,13 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-from api import router as api_router
-from core.config import settings
-from db import elastic, redis
 from elasticsearch import AsyncElasticsearch
 from fastapi import FastAPI
 from redis.asyncio import Redis
+
+from api import router as api_router
+from core.config import settings
+from db import elastic, redis
 
 
 @asynccontextmanager

@@ -2,6 +2,7 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException, status
+
 from services import exceptions
 from services.person import PersonService, get_person_service
 

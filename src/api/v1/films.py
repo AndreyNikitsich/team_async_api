@@ -3,6 +3,7 @@ from http import HTTPStatus
 from typing import Annotated, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+
 from models.film import Film
 from services import exceptions
 from services.film import FilmService, get_film_service
