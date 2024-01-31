@@ -1,0 +1,63 @@
+version: "3"
+services:
+  nginx:
+    build:
+      context: nginx
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: src
+    expose:
+      - 8000
+    depends_on:
+      elastic:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file: .env
+
+  postgres:
+    build:
+      context: data/postgres
+    expose:
+      - 5432
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+
+  elastic:
+    build:
+      context: data/elasticsearch
+    expose:
+      - 9200
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:9200/
+      interval: 10s
+      retries: 80
+
+  redis:
+    image: redis:7.2.0
+    expose:
+      - 6379
+    volumes:
+      - rd_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 1s
+      timeout: 2s
+      retries: 5
+
+networks:
+  default:
+      name: movies
+
+volumes:
+  rd_data:
+  es_data:

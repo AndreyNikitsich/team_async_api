@@ -17,10 +17,11 @@ class EnvSettings(BaseSettings):
     )
 
 
-class SwaggerSettings(EnvSettings):
+class ProjectMetadataSettings(EnvSettings):
     PROJECT_NAME: str = Field(default="movies")
     DOCS_URL: str = "/api/openapi"
     OPENAPI_URL: str = "/api/openapi.json"
+    VERSION: str = "0.1.0"
 
 
 class RedisSettings(EnvSettings):
@@ -44,7 +45,7 @@ class ApiSettings(EnvSettings):
 
 
 class Settings(BaseSettings):
-    swagger: SwaggerSettings = SwaggerSettings()
+    project_metadata: ProjectMetadataSettings = ProjectMetadataSettings()
     redis: RedisSettings = RedisSettings()
     es: ElasticSettings = ElasticSettings()
     api: ApiSettings = ApiSettings()

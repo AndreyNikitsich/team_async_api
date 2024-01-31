@@ -1,10 +1,10 @@
 from functools import lru_cache
 from typing import Annotated
 
-from core.config import settings
 from fastapi import Depends
-from models.genre import Genre
 
+from core.config import settings
+from models.genre import Genre
 from services.db import ElasticService
 
 

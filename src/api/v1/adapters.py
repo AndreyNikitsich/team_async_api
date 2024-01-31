@@ -1,6 +1,5 @@
-from models.film import Film, FilmGenres, FilmPerson
-
 from api.v1.response_models import BaseGenreResponse, BasePersonResponse, DetailFilmResponse
+from models.film import Film, FilmGenres, FilmPerson
 
 
 def film_person_to_base_person_response(person: FilmPerson):

@@ -1,10 +1,10 @@
 from functools import lru_cache
 from typing import Annotated
 
-from core.config import settings
 from fastapi import Depends
-from models.film import Film
 
+from core.config import settings
+from models.film import Film
 from services.db import ElasticService
 
 

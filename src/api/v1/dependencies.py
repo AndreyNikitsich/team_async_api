@@ -1,6 +1,7 @@
-from core.config import settings
 from fastapi import Query
 from pydantic import BaseModel
+
+from core.config import settings
 
 
 class PaginationParams(BaseModel):
