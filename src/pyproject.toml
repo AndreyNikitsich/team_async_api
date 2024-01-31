@@ -40,14 +40,30 @@ select = [
     "T10",  # flake8-debugger
     "W",  # pycodestyle
 ]
-
+extend-exclude = ["data"]
+extend-ignore = ["B904"]
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
 
 [tool.mypy]
 python_version = "3.11"
+plugins = [
+  "pydantic.mypy"
+]
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+exclude="data"
 
 # TODO: remove
 [[tool.mypy.overrides]]
 module = "fake_data.*"
 ignore_errors = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true

@@ -15,35 +15,34 @@ class GenreService:
         self.elastic_service = elastic_service
 
     async def get_genres(
-            self, *,
-            page_size: int,
-            page_number: int,
-            sort: list[str] | None = None,
+        self,
+        *,
+        page_size: int,
+        page_number: int,
+        sort: list[str] | None = None,
     ) -> list[Genre]:
         """
         Возвращает список жанров по параметрам.
         Может возвращать пустой список, так как база фильмов может быть пуста.
         """
         data = await self.elastic_service.search_models(
-            index=settings.es.GENRE_INDEX,
-            page_number=page_number,
-            page_size=page_size,
-            sort=sort
+            index=settings.es.GENRE_INDEX, page_number=page_number, page_size=page_size, sort=sort
         )
 
         if not data:
             return []
 
-        genres = [Genre(**row) for row in data]
+        genres = [Genre(**row["_source"]) for row in data]
 
         return genres
 
     async def get_by_search(
-            self, *,
-            page_size: int,
-            page_number: int,
-            query: str,
-            sort: list[str] | None = None,
+        self,
+        *,
+        page_size: int,
+        page_number: int,
+        query: str,
+        sort: list[str] | None = None,
     ) -> list[Genre]:
         """
         Возвращает список жанров по поиску.
@@ -60,22 +59,18 @@ class GenreService:
                     "fields": [
                         "name",
                         "descriptions",
-                    ]
+                    ],
                 }
             }
 
         data = await self.elastic_service.search_models(
-            index=settings.es.GENRE_INDEX,
-            query=query_match,
-            page_number=page_number,
-            page_size=page_size,
-            sort=sort
+            index=settings.es.GENRE_INDEX, query=query_match, page_number=page_number, page_size=page_size, sort=sort
         )
 
         if not data:
             return []
 
-        genres = [Genre(**row) for row in data]
+        genres = [Genre(**row["_source"]) for row in data]
 
         return genres
 
@@ -84,10 +79,7 @@ class GenreService:
         Возвращает объект жанра по id (uuid).
         Он опционален, так как жанр может отсутствовать в базе.
         """
-        data = await self.elastic_service.get_model(
-            index=settings.es.GENRE_INDEX,
-            model_id=genre_id
-        )
+        data = await self.elastic_service.get_model(index=settings.es.GENRE_INDEX, model_id=genre_id)
         if not data:
             return None
 
@@ -96,6 +88,6 @@ class GenreService:
 
 @lru_cache()
 def get_genre_service(
-        db_service: Annotated[ElasticService, Depends()],
+    db_service: Annotated[ElasticService, Depends()],
 ) -> GenreService:
     return GenreService(db_service)
