@@ -4,7 +4,7 @@ services:
     build:
       context: nginx
     ports:
-      - "80:80"
+      - "8000:80"
     depends_on:
       - backend
 
@@ -35,6 +35,8 @@ services:
       context: data/elasticsearch
     expose:
       - 9200
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
     healthcheck:
       test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:9200/
       interval: 10s
@@ -44,6 +46,8 @@ services:
     image: redis:7.2.0
     expose:
       - 6379
+    volumes:
+      - rd_data:/data
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       interval: 1s
@@ -53,3 +57,7 @@ services:
 networks:
   default:
       name: movies
+
+volumes:
+  rd_data:
+  es_data:
