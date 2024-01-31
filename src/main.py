@@ -21,9 +21,9 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    title=settings.swagger.PROJECT_NAME,
-    docs_url=settings.swagger.DOCS_URL,
-    openapi_url=settings.swagger.OPENAPI_URL,
+    title=settings.project_metadata.PROJECT_NAME,
+    docs_url=settings.project_metadata.DOCS_URL,
+    openapi_url=settings.project_metadata.OPENAPI_URL,
 )
 
 app.include_router(api_router, prefix="/api")
