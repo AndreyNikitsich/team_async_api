@@ -7,6 +7,11 @@ Async API - сервис асинхронного апи для кинотеат
 - Run `cd src && poetry install` to create `.venv`
 - ```cp .env.example .env  # edit if necessary```
 
+## Run functional tests
+```bash
+docker-compose -f docker-compose-tests.yml up
+```
+
 ## Start on production
 ```bash
 cp .env.example .env  # edit if necessary
