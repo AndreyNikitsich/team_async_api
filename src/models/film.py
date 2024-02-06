@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class FilmGenres(BaseModel):
@@ -30,3 +30,5 @@ class Film(BaseModel):
 
     writers: List[FilmPerson]
     writers_names: List[str]
+
+    model_config = ConfigDict(extra="ignore")
