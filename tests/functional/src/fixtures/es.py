@@ -1,7 +1,7 @@
 import pytest_asyncio
 from elasticsearch import AsyncElasticsearch
 
-from ...settings import test_settings
+from functional.settings import test_settings
 
 
 @pytest_asyncio.fixture(scope="session", name="es_client")

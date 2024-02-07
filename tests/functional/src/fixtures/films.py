@@ -1,9 +1,9 @@
 import pytest
 import pytest_asyncio
 
-from ...settings import film_settings
-from ...testdata import fake_films
-from ...utils.es_index import ESIndex
+from functional.settings import film_settings
+from functional.testdata import fake_films
+from functional.utils.es_index import ESIndex
 
 
 @pytest.fixture(scope="module", name="films_data")

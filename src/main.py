@@ -26,7 +26,6 @@ app = FastAPI(
     title=settings.project_metadata.PROJECT_NAME,
     docs_url=settings.project_metadata.DOCS_URL,
     openapi_url=settings.project_metadata.OPENAPI_URL,
-    description="Информация о фильмах, жанрах и людях, участвовавших в создании произведения",
     version="0.1.0"
 )
 
@@ -37,6 +36,4 @@ if __name__ == "__main__":
         "main:app",
         host="0.0.0.0",  # noqa: S104
         port=8000,
-        log_config=LOGGING,
-        log_level=logging.DEBUG,
     )

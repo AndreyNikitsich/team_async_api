@@ -3,7 +3,7 @@ import time
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
 
-from ..settings import TestSettings
+from functional.settings import TestSettings
 
 
 class ESIndex:

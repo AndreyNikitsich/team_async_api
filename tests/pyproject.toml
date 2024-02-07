@@ -22,13 +22,11 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
+pythonpath = ["."]
 norecursedirs = "env/*"
 addopts = "-vv -p no:cacheprovider"
-testpaths = "./src"
+testpaths = ["./functional"]
 python_files = "test_*.py"
-
-#log_cli = "true"
-#log_level = "NOTSET"
 
 [tool.ruff]
 line-length = 120
