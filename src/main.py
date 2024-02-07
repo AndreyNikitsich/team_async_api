@@ -1,4 +1,3 @@
-import logging
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -8,7 +7,6 @@ from redis.asyncio import Redis
 
 from api import router as api_router
 from core.config import settings
-from core.logger import LOGGING
 from db import elastic, redis
 
 
