@@ -12,7 +12,7 @@ def films_data():
 
     bulk_query: list[dict] = []
     for row in es_data:
-        data = {"_index": "movies", "_id": row["id"]}
+        data = {"_index": film_settings.ES_INDEX, "_id": row["id"]}
         data.update({"_source": row})
         bulk_query.append(data)
 
