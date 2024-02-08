@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fastapi-solution-test"
+name = "api-movies-test"
 version = "0.1.0"
 description = "Functional tests for async API"
 authors = ["Andrey Nikitsich <andrey.nikitsich@gmail.com>, vladmeh <vladmeh@gmail.com>"]

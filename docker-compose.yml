@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   nginx:
     build:
@@ -56,7 +56,7 @@ services:
 
 networks:
   default:
-      name: movies
+    name: movies
 
 volumes:
   rd_data:
