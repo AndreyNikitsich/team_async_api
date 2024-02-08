@@ -14,19 +14,19 @@ fake = Faker()
                     "page_number": 1,
                     "page_size": 50,
                 },
-                {"status": 200, "length": 20}
+                {"status": 200, "length": 30}
         ),
         (
                 {
                     "page_size": 50,
                 },
-                {"status": 200, "length": 20}
+                {"status": 200, "length": 30}
         ),
         (
                 {
                     "page_number": 1,
                 },
-                {"status": 200, "length": 20}
+                {"status": 200, "length": 30}
         ),
     ]
 )

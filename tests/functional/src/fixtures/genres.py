@@ -8,7 +8,7 @@ from functional.utils.es_index import ESIndex
 
 @pytest.fixture(scope="module", name="genres_data")
 def genres_data():
-    es_data = fake_genres.generate_films_data(20)
+    es_data = fake_genres.generate_genres_data()
 
     bulk_query: list[dict] = []
     for row in es_data:

@@ -5,14 +5,18 @@ from faker import Faker
 from faker.providers import DynamicProvider
 from pydantic import BaseModel
 
+person_names = ["Stan", "Ann", "Bob", "Ben", "Howard"]
+
 persons_name_provider = DynamicProvider(
     provider_name="person_name",
-    elements=["Stan", "Ann", "Bob", "Ben", "Howard"],
+    elements=person_names,
 )
+
+genres_names = ["Action", "Sci-Fi", "Comedy"]
 
 genres_name_provider = DynamicProvider(
     provider_name="genre_name",
-    elements=["Action", "Sci-Fi", "Comedy"],
+    elements=genres_names,
 )
 
 fake = Faker()
@@ -50,26 +54,26 @@ class Film(BaseModel):
     writers_names: list[str]
 
 
-def generate_genres(cnt: int) -> list[FilmGenre]:
+def generate_genres() -> list[FilmGenre]:
     """Генератор фейковых данных для жанров в фильме."""
     return [FilmGenre(
         id=fake.uuid4(),
-        name=fake.genre_name()
-    ) for _ in range(cnt)]
+        name=name
+    ) for name in genres_names]
 
 
-def generate_persons(cnt: int) -> list[FilmPerson]:
+def generate_persons() -> list[FilmPerson]:
     """Генератор фейковых данных для персон в фильме."""
     return [FilmPerson(
         id=fake.uuid4(),
-        name=fake.person_name()
-    ) for _ in range(cnt)]
+        name=name
+    ) for name in person_names]
 
 
 def generate_films(cnt: int) -> list[Film]:
     """Генератор фейковых данных фильмов."""
-    genres = generate_genres(3)
-    persons = generate_persons(5)
+    genres = generate_genres()
+    persons = generate_persons()
     return [Film(
         id=fake.uuid4(),
         imdb_rating=round(random.uniform(0, 10), 1),
@@ -91,8 +95,8 @@ def generate_film_by_id(film_id: str) -> Film:
     Генератор фейковых данных одного фильма с предустановленным id,
     для тестирования вывода фильма по uuid.
     """
-    genres = generate_genres(3)
-    persons = generate_persons(5)
+    genres = generate_genres()
+    persons = generate_persons()
     return Film(
         id=film_id,
         imdb_rating=round(random.uniform(0, 10), 1),
