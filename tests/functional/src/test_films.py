@@ -20,9 +20,37 @@ fake = Faker()
         ),
         (
                 {
-                    "query": "Mashed potato",
+                    "query": "The Star",
                     "page_number": 1,
+                    "sort": "-imdb_rating"
+                },
+                {"status": 200, "length": 50}
+        ),
+        (
+                {
+                    "query": "The Star",
                     "page_size": 50,
+                    "sort": "-imdb_rating"
+                },
+                {"status": 200, "length": 50}
+        ),
+        (
+                {
+                    "query": "The Star",
+                    "sort": "-imdb_rating"
+                },
+                {"status": 200, "length": 50}
+        ),
+        (
+                {
+                    "query": "The Star",
+                    "sort": "imdb_rating"
+                },
+                {"status": 200, "length": 50}
+        ),
+        (
+                {
+                    "query": "Mashed potato",
                     "sort": "-imdb_rating"
                 },
                 {"status": 200, "length": 0}
@@ -53,8 +81,32 @@ async def test_films_search(make_get_request, query_data, expected_answer):
         ),
         (
                 {
-                    "page_number": 1,
                     "page_size": 50,
+                    "sort": "-imdb_rating"
+                },
+                {"status": 200, "length": 50}
+        ),
+        (
+                {
+                    "page_number": 1,
+                    "sort": "-imdb_rating"
+                },
+                {"status": 200, "length": 50}
+        ),
+        (
+                {
+                    "sort": "-imdb_rating"
+                },
+                {"status": 200, "length": 50}
+        ),
+        (
+                {
+                    "sort": "imdb_rating"
+                },
+                {"status": 200, "length": 50}
+        ),
+        (
+                {
                     "sort": "-imdb_rating",
                     "genre": "Fake"
                 },
