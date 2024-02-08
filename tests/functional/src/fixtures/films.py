@@ -29,9 +29,6 @@ def film_index(es_client):
 
 @pytest_asyncio.fixture(scope="module", name="prepare_films_data")
 async def prepare_films_data(film_index, films_data):
+    await film_index.delete()
     await film_index.create()
     await film_index.update(films_data)
-
-    yield
-
-    await film_index.delete()
