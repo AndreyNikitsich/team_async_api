@@ -4,7 +4,7 @@ services:
     build:
       context: nginx
     ports:
-      - "8000:80"
+      - "8001:80"
     depends_on:
       - backend
 
@@ -13,6 +13,8 @@ services:
       context: src
     expose:
       - 8000
+    ports:
+      - "8000:8000"
     depends_on:
       elastic:
         condition: service_healthy
@@ -45,6 +47,8 @@ services:
       context: data/elasticsearch
     expose:
       - 9200
+    ports:
+      - "9200:9200"
     volumes:
       - es_data:/usr/share/elasticsearch/data
     healthcheck:
@@ -56,6 +60,8 @@ services:
     image: redis:7.2.0
     expose:
       - 6379
+    ports:
+      - "6379:6379"
     volumes:
       - rd_data:/data
     healthcheck:

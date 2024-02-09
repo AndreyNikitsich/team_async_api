@@ -1,18 +1,46 @@
 [tool.poetry]
-name = "async-api-functional-tests"
+name = "api-movies-test"
 version = "0.1.0"
 description = "Functional tests for async API"
-authors = ["Andrey Nikitsich <andrey.nikitsich@gmail.com>"]
+authors = ["Andrey Nikitsich <andrey.nikitsich@gmail.com>, vladmeh <vladmeh@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pytest = "7.4.4"
-pytest-asyncio = "<=0.21.1"
-aiohttp = "3.7.2"
-elasticsearch = {version = "^8.12.0", extras = ["async"]}
+pydantic-settings = "^2.1.0"
+redis = "^5.0.1"
+elasticsearch = { extras = ["async"], version = "^8.12.0" }
+pytest = "^7.4.4"
+pytest-asyncio = "0.21.1"
+ruff = "^0.1.14"
+pydantic = "^2.6.1"
+faker = "^22.7.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+norecursedirs = "env/*"
+addopts = "-vv -p no:cacheprovider"
+testpaths = ["./functional"]
+python_files = "test_*.py"
+
+[tool.ruff]
+line-length = 120
+select = [
+    "B",  # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "E",  # pycodestyle
+    "ERA",  # eradicate
+    "F",  # pyflakes
+    "I",  # isort
+    "N",  # pep8-naming
+    "Q",  # flake8-quotes
+    "T10",  # flake8-debugger
+    "W",  # pycodestyle
+]
+extend-exclude = ["testdata"]
+extend-ignore = ["B904"]
