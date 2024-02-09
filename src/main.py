@@ -24,7 +24,7 @@ app = FastAPI(
     title=settings.project_metadata.PROJECT_NAME,
     docs_url=settings.project_metadata.DOCS_URL,
     openapi_url=settings.project_metadata.OPENAPI_URL,
-    version="0.1.0"
+    version=settings.project_metadata.VERSION
 )
 
 app.include_router(api_router, prefix="/api")

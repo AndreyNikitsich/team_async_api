@@ -20,10 +20,10 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 FROM python:3.11-slim-buster
 
-WORKDIR /app
+WORKDIR /app/tests/functional
 
 COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-COPY . /app
+COPY . /app/tests/functional
