@@ -11,9 +11,21 @@ fake = Faker()
     [
         (
                 {
-                    "query": "Lee",
+                    "query": "Steven",
                 },
-                {"status": 200, "length": 50}
+                {"status": 200, "length": 1}
+        ),
+        (
+                {
+                    "query": "NOT_FOUNDED_NAME",
+                },
+                {"status": 200, "length": 0}
+        ),
+        (
+                {
+                    "query": "Cteven",  # test full text search, should find Steven
+                },
+                {"status": 200, "length": 1}
         ),
     ]
 )
