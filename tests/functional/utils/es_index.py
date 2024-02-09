@@ -18,7 +18,7 @@ class ESIndex:
 
     async def update(self, es_data):
         updated, errors = await async_bulk(client=self.client, actions=es_data)
-        time.sleep(1)
+        time.sleep(2)
         if errors:
             raise Exception("Ошибка записи данных в Elasticsearch")
 
