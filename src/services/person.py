@@ -123,7 +123,7 @@ class PersonService:
             }
 
         data = await self.elastic_service.search_models(
-            index=settings.es.PERSONS_INDEX, query=query_match, page_number=page_number, page_size=page_size, sort=sort
+            index=settings.es.PERSONS_INDEX, query_match=query_match, page_number=page_number, page_size=page_size, sort=sort
         )
 
         if not data:

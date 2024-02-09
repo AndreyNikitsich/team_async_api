@@ -52,7 +52,6 @@ class ElasticService:
                 size=page_size,
                 from_=self._get_offset(page_number, page_size),
             )
-
         except NotFoundError:
             return None
 
