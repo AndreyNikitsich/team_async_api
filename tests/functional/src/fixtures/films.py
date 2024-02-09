@@ -12,7 +12,7 @@ def films_data():
 
     bulk_query: list[dict] = []
     for row in es_data:
-        data = {"_index": "movies", "_id": row["id"]}
+        data = {"_index": film_settings.ES_INDEX, "_id": row["id"]}
         data.update({"_source": row})
         bulk_query.append(data)
 
@@ -29,9 +29,6 @@ def film_index(es_client):
 
 @pytest_asyncio.fixture(scope="module", name="prepare_films_data")
 async def prepare_films_data(film_index, films_data):
+    await film_index.delete()
     await film_index.create()
     await film_index.update(films_data)
-
-    yield
-
-    await film_index.delete()
