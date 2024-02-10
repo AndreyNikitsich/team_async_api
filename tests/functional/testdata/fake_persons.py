@@ -3,68 +3,63 @@ from enum import Enum
 from typing import Any
 
 from faker import Faker
-from faker.providers import DynamicProvider
 from pydantic import BaseModel
 
 fake = Faker()
 
 person_names = [
-    "Cheryl",
-    "William",
-    "David",
-    "Rhonda",
-    "Nicole",
-    "Jennifer",
-    "Tina",
-    "Denise",
-    "Elizabeth",
-    "Edward",
-    "Jeremy",
-    "Ian",
-    "Logan",
-    "Kristin",
-    "Mary",
-    "Shawn",
-    "Raymond",
-    "Kimberly",
-    "Kendra",
-    "Heather",
-    "Anthony",
-    "Cynthia",
-    "Paul",
-    "Karen",
-    "Randall",
-    "Julie",
-    "Keith",
-    "Steven",
-    "Evan",
-    "Nancy",
-    "Maureen",
-    "Alexander",
-    "Brandon",
-    "Dawn",
-    "Charlene",
-    "Anita",
-    "Jeffrey",
-    "Mercedes",
-    "Marissa",
-    "Allison",
-    "Shirley",
-    "Jose",
-    "Kyle",
-    "Maria",
-    "Julia",
-    "Kathleen",
-    "Diana",
-    "Juan",
-    "Jimmy",
+    "Martin Anderson",
+    "Nathan Stone",
+    "John Cisneros",
+    "Jeffrey Howell",
+    "Brianna Aguirre",
+    "Rebekah Wiggins",
+    "Rebekah Allen",
+    "Jennifer Davis",
+    "Derrick Gomez",
+    "Lindsey Davis",
+    "Cristian Harris",
+    "Jessica Wheeler",
+    "Cheryl Ray",
+    "Janice Harris",
+    "Norman Gardner",
+    "Diane Lewis",
+    "Robert Wagner",
+    "Gregory Baldwin",
+    "Lisa Allen",
+    "Nicole Vasquez",
+    "Nicholas Robles",
+    "Deborah Lucas",
+    "Kaylee Taylor",
+    "Gregory Patterson",
+    "Lisa Moses",
+    "Mike Duncan",
+    "Matthew Holmes",
+    "Jonathan Fowler",
+    "John Peterson",
+    "Jennifer Mcneil",
+    "Robert Goodman",
+    "John Barron",
+    "Cody Turner",
+    "Anthony Farrell",
+    "Elizabeth Crawford",
+    "Emma Hall",
+    "Philip Boyd",
+    "Robert Myers",
+    "Lisa Lee",
+    "Daniel Collins",
+    "Sean Morgan",
+    "Norma Flynn",
+    "Michael Goodman",
+    "Sarah Chavez",
+    "Bradley Maldonado",
+    "Stacy Carlson",
+    "Tara Hernandez",
+    "Antonio Smith",
+    "Adam Mccoy",
+    "Brian Scott",
+    "Susan Gibson",
 ]
-
-persons_name_provider = DynamicProvider(
-    provider_name="person_name",
-    elements=person_names,
-)
-fake.add_provider(persons_name_provider)
 
 
 class PersonFilmRoles(str, Enum):
@@ -101,13 +96,14 @@ def generate_persons() -> list[Person]:
         for name in person_names
     ]
 
+generated_person_films = generate_person_films(5)
 
 def generate_person_by_id(person_id: str) -> Person:
     """
     Генератор фейковых данных одной персоны с предустановленным id,
     для тестирования вывода персоны по uuid.
     """
-    return Person(id=person_id, full_name="Lee", films=generate_person_films(random.randint(1, 5)))
+    return Person(id=person_id, full_name="Lee Trump", films=generated_person_films)
 
 
 def generate_persons_data(constant_id: str = "08952b1c-55ff-4cc4-8078-b37fc41b6ff5") -> list[dict[str, Any]]:
