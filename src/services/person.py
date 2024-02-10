@@ -26,32 +26,29 @@ class PersonService:
         return Person(**data)
 
     async def get_films_for_person(
-            self, *,
-            person_id: str,
-            page_size: int,
-            page_number: int,
-            sort: list[str] | None = None,
+        self,
+        *,
+        person_id: str,
+        page_size: int,
+        page_number: int,
+        sort: list[str] | None = None,
     ) -> list[PersonFilm]:
         """
         Возвращает список фильмов у персоны.
         """
         query_match = {
             "bool": {
-                "must": {
-                    "term": {"id": person_id}
-                },
+                "must": {"term": {"id": person_id}},
                 "filter": {
                     "nested": {
                         "path": "films",
-                        "query": {
-                            "match_all": {}
-                        },
+                        "query": {"match_all": {}},
                         "inner_hits": {
                             "size": page_size,
-                            "from": self.elastic_service.get_offset(page_number, page_size)
-                        }
+                            "from": self.elastic_service.get_offset(page_number, page_size),
+                        },
                     }
-                }
+                },
             }
         }
 
@@ -60,7 +57,7 @@ class PersonService:
             query_match=query_match,
             page_number=page_number,
             page_size=page_size,
-            sort=sort
+            sort=sort,
         )
 
         if not data:
@@ -122,7 +119,11 @@ class PersonService:
             }
 
         data = await self.elastic_service.search_models(
-            index=settings.es.PERSONS_INDEX, query_match=query_match, page_number=page_number, page_size=page_size, sort=sort
+            index=settings.es.PERSONS_INDEX,
+            query_match=query_match,
+            page_number=page_number,
+            page_size=page_size,
+            sort=sort,
         )
 
         if not data:

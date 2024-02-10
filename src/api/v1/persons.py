@@ -11,6 +11,7 @@ from .response_models import BasePersonResponse, DetailPersonResponse, PersonsFi
 
 router = APIRouter(prefix="/persons", tags=["persons"])
 
+
 @router.get(
     "/search",
     summary="Полнотекстовый поиск по персоналиям",
@@ -73,7 +74,6 @@ async def get_films_for_person(
         page_number=pagination_params.page_number,
     )
     response = [
-        PersonsFilmResponse(uuid=person.id, title=person.title, roles=person.roles)
-        for person in persons_with_films
+        PersonsFilmResponse(uuid=person.id, title=person.title, roles=person.roles) for person in persons_with_films
     ]
     return response
