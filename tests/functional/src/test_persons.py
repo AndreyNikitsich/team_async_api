@@ -1,6 +1,5 @@
 import pytest
 from faker import Faker
-
 from functional.testdata.fake_persons import generated_person_films
 
 from ..settings import test_settings
