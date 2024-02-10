@@ -73,7 +73,7 @@ async def get_films_for_person(
         page_number=pagination_params.page_number,
     )
     response = [
-        PersonsFilmResponse(uuid=person.id, title=person.title, imdb_rating=person.imdb_rating, roles=person.roles)
+        PersonsFilmResponse(uuid=person.id, title=person.title, roles=person.roles)
         for person in persons_with_films
     ]
     return response
