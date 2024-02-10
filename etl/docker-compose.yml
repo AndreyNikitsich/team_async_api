@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13.3-alpine
+    container_name: postgres
+    env_file:
+      - ./postgres_to_es/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./schema_design:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+
+  elasticsearch:
+    image: elasticsearch:8.6.2
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms200m -Xmx200m
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - backend
+    depends_on:
+      - db
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - rd_data:/data
+    networks:
+      - backend
+
+volumes:
+  pg_data:
+  es_data:
+  rd_data:
+
+networks:
+  backend:
+    name: backend
