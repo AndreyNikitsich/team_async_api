@@ -106,7 +106,7 @@ def generate_person_by_id(person_id: str) -> Person:
     return Person(id=person_id, full_name="Lee Trump", films=generated_person_films)
 
 
-def generate_persons_data(constant_id: str = "08952b1c-55ff-4cc4-8078-b37fc41b6ff5") -> list[dict[str, Any]]:
+def generate_persons_data(constant_id: str = "20f26754-95da-4a4e-98a5-ea78e3d29862") -> list[dict[str, Any]]:
     """Генератор данных для загрузки в ЕС."""
     persons = generate_persons()
     persons.append(generate_person_by_id(constant_id))

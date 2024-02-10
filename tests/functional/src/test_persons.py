@@ -51,7 +51,7 @@ async def test_persons_search(make_get_request, query_data, expected_answer):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        ("08952b1c-55ff-4cc4-8078-b37fc41b6ff5", 200),
+        ("20f26754-95da-4a4e-98a5-ea78e3d29862", 200),
     ]
 )
 @pytest.mark.asyncio
@@ -84,7 +84,7 @@ async def test_person_not_found(make_get_request, uuid, expected_status):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        ("08952b1c-55ff-4cc4-8078-b37fc41b6ff5", 200),
+        ("20f26754-95da-4a4e-98a5-ea78e3d29862", 200),
     ]
 )
 @pytest.mark.asyncio
