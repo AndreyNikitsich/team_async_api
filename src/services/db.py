@@ -50,7 +50,7 @@ class ElasticService:
                 query=query,
                 sort=self._parse_sort(sort),
                 size=page_size,
-                from_=self._get_offset(page_number, page_size),
+                from_=self.get_offset(page_number, page_size),
             )
         except NotFoundError:
             return None
@@ -78,7 +78,7 @@ class ElasticService:
         return doc["_source"]
 
     @staticmethod
-    def _get_offset(page_number: int | None, page_size: int | None) -> int | None:
+    def get_offset(page_number: int | None, page_size: int | None) -> int | None:
         if page_number is not None and page_size is not None:
             return (page_number - 1) * page_size
 

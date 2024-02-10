@@ -48,7 +48,7 @@ class PersonService:
                         },
                         "inner_hits": {
                             "size": page_size,
-                            "from": page_number
+                            "from": self.elastic_service.get_offset(page_number, page_size)
                         }
                     }
                 }
@@ -66,12 +66,12 @@ class PersonService:
         if not data:
             return []
 
-        data_films = [row["inner_hits"]["films"]["hits"]["hits"] for row in data]
+        data_films = data[0]["inner_hits"]["films"]["hits"]["hits"]
 
         if not data_films:
             return []
 
-        films = [PersonFilm(**row["_source"]) for row in data_films[0]]
+        films = [PersonFilm(**row["_source"]) for row in data_films]
 
         return films
 
