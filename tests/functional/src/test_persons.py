@@ -68,6 +68,22 @@ async def test_person_detail(make_get_request, uuid, expected_status):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
+        (fake.uuid4(), 404),
+    ]
+)
+@pytest.mark.asyncio
+@pytest.mark.usefixtures("prepare_persons_data")
+async def test_person_not_found(make_get_request, uuid, expected_status):
+    """Проверка запроса несуществующей персоны."""
+    url = test_settings.SERVICE_URL + "/api/v1/persons/" + uuid
+    body, headers, status = await make_get_request(url)
+
+    assert status == expected_status
+
+
+@pytest.mark.parametrize(
+    "uuid, expected_status",
+    [
         ("08952b1c-55ff-4cc4-8078-b37fc41b6ff5", 200),
     ]
 )
