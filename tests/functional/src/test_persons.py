@@ -13,7 +13,7 @@ fake = Faker()
     [
         (
                 {
-                    "query": "Rebekah Wiggins",
+                    "query": "Cheryl Ray",
                 },
                 {"status": 200, "length": 1}
         ),
@@ -25,7 +25,7 @@ fake = Faker()
         ),
         (
                 {
-                    "query": "Rebecah Wigins",  # test full text search, should find "Rebekah Wiggins"
+                    "query": "Cheryl Rai",  # test full text search, should find "Cheryl Ray"
                 },
                 {"status": 200, "length": 1}
         ),
