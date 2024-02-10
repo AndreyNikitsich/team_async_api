@@ -57,11 +57,10 @@ class PersonService:
 
         data = await self.elastic_service.search_models(
             index=settings.es.PERSONS_INDEX,
-            query=query_match,
+            query_match=query_match,
             page_number=page_number,
             page_size=page_size,
-            sort=sort,
-            inner_hits=True
+            sort=sort
         )
 
         if not data:
@@ -72,7 +71,7 @@ class PersonService:
         if not data_films:
             return []
 
-        films = [PersonFilm(**row["_source"]) for row in data_films]
+        films = [PersonFilm(**row["_source"]) for row in data_films[0]]
 
         return films
 
