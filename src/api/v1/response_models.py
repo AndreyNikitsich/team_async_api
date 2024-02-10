@@ -25,7 +25,9 @@ class BaseFilmResponse(BaseModel):
     imdb_rating: float | None
 
 
-class PersonsFilmResponse(BaseFilmResponse):
+class PersonsFilmResponse(BaseModel):
+    uuid: str
+    title: str
     roles: list[str]
 
 

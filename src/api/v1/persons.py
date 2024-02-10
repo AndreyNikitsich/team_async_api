@@ -13,6 +13,28 @@ router = APIRouter(prefix="/persons", tags=["persons"])
 
 
 @router.get(
+    "/search",
+    summary="Полнотекстовый поиск по персоналиям",
+    response_model=list[BasePersonResponse],
+    status_code=status.HTTP_200_OK,
+)
+async def search_person_by_query(
+    query: str,
+    pagination: PaginationParams = Depends(get_pagination_params),
+    person_service: PersonService = Depends(get_person_service),
+) -> list[BasePersonResponse]:
+    try:
+        persons = await person_service.get_by_search(
+            query=query, page_number=pagination.page_number, page_size=pagination.page_size
+        )
+    except exceptions.BadRequestError as ex:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=ex.message)
+
+    response = [BasePersonResponse(uuid=person.id, full_name=person.full_name) for person in persons]
+    return response
+
+
+@router.get(
     "/{person_id}",
     summary="Получить детальную информация о персоне",
     response_model=DetailPersonResponse,
@@ -52,29 +74,6 @@ async def get_films_for_person(
         page_number=pagination_params.page_number,
     )
     response = [
-        PersonsFilmResponse(uuid=person.id, title=person.title, imdb_rating=person.imdb_rating, roles=person.roles)
-        for person in persons_with_films
+        PersonsFilmResponse(uuid=person.id, title=person.title, roles=person.roles) for person in persons_with_films
     ]
-    return response
-
-
-@router.get(
-    "/search",
-    summary="Полнотекстовый поиск по персоналиям",
-    response_model=list[BasePersonResponse],
-    status_code=status.HTTP_200_OK,
-)
-async def search_person_by_query(
-    query: str,
-    pagination: PaginationParams = Depends(get_pagination_params),
-    person_service: PersonService = Depends(get_person_service),
-) -> list[BasePersonResponse]:
-    try:
-        persons = await person_service.get_by_search(
-            query=query, page_number=pagination.page_number, page_size=pagination.page_size
-        )
-    except exceptions.BadRequestError as ex:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=ex.message)
-
-    response = [BasePersonResponse(uuid=person.id, full_name=person.full_name) for person in persons]
     return response
