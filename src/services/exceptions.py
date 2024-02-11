@@ -1,4 +1,4 @@
-from typing import Any, Tuple
+from typing import Any
 
 
 class ServiceError(Exception):
@@ -9,7 +9,7 @@ class ServiceError(Exception):
         message: str,
         status_code: int,
         body: Any,
-        errors: Tuple[Exception, ...] = (),
+        errors: tuple[Exception, ...] = (),
     ):
         super().__init__(message)
         self.message = message

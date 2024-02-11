@@ -1,12 +1,10 @@
-from typing import List
-
 from pydantic import BaseModel
 
 
 class PersonFilm(BaseModel):
     id: str
     title: str
-    roles: List[str]
+    roles: list[str]
 
 
 class Person(BaseModel):

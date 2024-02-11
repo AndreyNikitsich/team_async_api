@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -19,16 +17,16 @@ class Film(BaseModel):
     title: str
     description: str | None = Field("")
 
-    genres: List[FilmGenres]
-    genres_names: List[str]
+    genres: list[FilmGenres]
+    genres_names: list[str]
 
-    directors: List[FilmPerson]
-    directors_names: List[str]
+    directors: list[FilmPerson]
+    directors_names: list[str]
 
-    actors: List[FilmPerson]
-    actors_names: List[str]
+    actors: list[FilmPerson]
+    actors_names: list[str]
 
-    writers: List[FilmPerson]
-    writers_names: List[str]
+    writers: list[FilmPerson]
+    writers_names: list[str]
 
     model_config = ConfigDict(extra="ignore")
