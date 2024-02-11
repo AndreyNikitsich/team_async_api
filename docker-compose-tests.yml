@@ -5,8 +5,6 @@ services:
       context: nginx
     ports:
       - "8001:80"
-    depends_on:
-      - backend
 
   backend:
     build:
@@ -15,18 +13,17 @@ services:
       - 8000
     ports:
       - "8000:8000"
-    depends_on:
-      elastic:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     env_file: .env
 
   tests:
     build:
       context: tests/functional
     entrypoint: >
-      sh -c "pytest src"
+      sh -c "
+        python wait_for_es.py &&
+        python wait_for_redis.py &&
+        pytest src
+      "
     depends_on:
       backend:
         condition: service_started
@@ -41,10 +38,6 @@ services:
       - "9200:9200"
     volumes:
       - es_data:/usr/share/elasticsearch/data
-    healthcheck:
-      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:9200/
-      interval: 10s
-      retries: 80
 
   redis:
     image: redis:7.2.0
@@ -54,11 +47,6 @@ services:
       - "6379:6379"
     volumes:
       - rd_data:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-      interval: 1s
-      timeout: 2s
-      retries: 5
 
 networks:
   default:
