@@ -39,7 +39,8 @@ async def get_films(
     except exceptions.BadRequestError as ex:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=ex.message)
 
-    response = [BaseFilmResponse(uuid=film.id, title=film.title, genres=film.genres_names, imdb_rating=film.imdb_rating) for film in films]
+    response = [BaseFilmResponse(uuid=film.id, title=film.title, genres=film.genres_names,
+                                 imdb_rating=film.imdb_rating) for film in films]
     return response
 
 
@@ -65,7 +66,8 @@ async def search_film_by_query(
     except exceptions.BadRequestError as ex:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=ex.message)
 
-    response = [BaseFilmResponse(uuid=film.id, title=film.title, genres=film.genres_names, imdb_rating=film.imdb_rating) for film in films]
+    response = [BaseFilmResponse(uuid=film.id, title=film.title, genres=film.genres_names,
+                                 imdb_rating=film.imdb_rating) for film in films]
     return response
 
 

@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13.3-alpine
+    container_name: postgres
+    env_file:
+      - ./postgres_to_es/.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U app -d movies_database" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./schema_design:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+
+  load_data:
+    build: ./sqlite_to_postgres
+    container_name: load_data
+    command: python load_data.py
+    env_file:
+      - ./sqlite_to_postgres/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - backend
+
+  elasticsearch:
+    image: elasticsearch:8.6.2
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms200m -Xmx200m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - frontend
+
+  etl:
+    build: ./postgres_to_es
+    container_name: etl
+    restart: always
+    env_file:
+      - ./postgres_to_es/.env
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      db:
+        condition: service_healthy
+      load_data:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+
+volumes:
+  pg_data:
+  es_data:
+
+networks:
+  backend:
+    name: backend
+  frontend:
+    name: frontend

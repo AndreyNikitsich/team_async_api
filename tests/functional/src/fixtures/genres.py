@@ -1,6 +1,5 @@
 import pytest
 import pytest_asyncio
-
 from functional.settings import genre_settings
 from functional.testdata import fake_genres
 from functional.utils.es_index import ESIndex

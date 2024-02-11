@@ -34,7 +34,7 @@ class PersonsFilmResponse(BaseModel):
 
 class DetailFilmResponse(BaseFilmResponse):
     description: str
-    genres: list[BaseGenreResponse]
+    genres: list[BaseGenreResponse]  # type: ignore
     actors: list[BasePersonResponse]
     writers: list[BasePersonResponse]
     directors: list[BasePersonResponse]
