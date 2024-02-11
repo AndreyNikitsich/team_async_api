@@ -42,7 +42,7 @@ fake = Faker()
 @pytest.mark.usefixtures("prepare_persons_data")
 async def test_persons_search(make_get_request, query_data, expected_answer):
     """Поиск персон."""
-    url = test_settings.SERVICE_URL + "/api/v1/persons/search"
+    url = test_settings.service_url + "/api/v1/persons/search"
     body, headers, status = await make_get_request(url, query_data)
 
     assert status == expected_answer["status"]
@@ -59,7 +59,7 @@ async def test_persons_search(make_get_request, query_data, expected_answer):
 @pytest.mark.usefixtures("prepare_persons_data")
 async def test_person_detail(make_get_request, uuid, expected_status):
     """Вывод информации о конкретной персоне."""
-    url = test_settings.SERVICE_URL + "/api/v1/persons/" + uuid
+    url = test_settings.service_url + "/api/v1/persons/" + uuid
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status
@@ -76,7 +76,7 @@ async def test_person_detail(make_get_request, uuid, expected_status):
 @pytest.mark.usefixtures("prepare_persons_data")
 async def test_person_not_found(make_get_request, uuid, expected_status):
     """Проверка запроса несуществующей персоны."""
-    url = test_settings.SERVICE_URL + "/api/v1/persons/" + uuid
+    url = test_settings.service_url + "/api/v1/persons/" + uuid
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status
@@ -92,7 +92,7 @@ async def test_person_not_found(make_get_request, uuid, expected_status):
 @pytest.mark.usefixtures("prepare_persons_data")
 async def test_persons_films(make_get_request, uuid, expected_status):
     """Проверка списка фильмов, в которых принимала участие персона."""
-    url = test_settings.SERVICE_URL + f"/api/v1/persons/{uuid}/films"
+    url = test_settings.service_url + f"/api/v1/persons/{uuid}/films"
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status

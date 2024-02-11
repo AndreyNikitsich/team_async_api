@@ -6,8 +6,8 @@ from functional.settings import TestSettings
 class ESIndex:
     def __init__(self, client: AsyncElasticsearch, test_config: TestSettings):
         self.client = client
-        self.index = test_config.ES_INDEX
-        self.index_mapping = test_config.ES_INDEX_MAPPING
+        self.index = test_config.es_index
+        self.index_mapping = test_config.es_index_mapping
 
     async def create(self):
         await self.client.indices.create(

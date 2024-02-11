@@ -36,7 +36,7 @@ fake = Faker()
 @pytest.mark.usefixtures("prepare_genres_data")
 async def test_genres(make_get_request, query_data, expected_answer):
     """Список жанров."""
-    url = test_settings.SERVICE_URL + "/api/v1/genres"
+    url = test_settings.service_url + "/api/v1/genres"
     body, headers, status = await make_get_request(url, query_data)
 
     assert status == expected_answer["status"]
@@ -53,7 +53,7 @@ async def test_genres(make_get_request, query_data, expected_answer):
 @pytest.mark.usefixtures("prepare_films_data")
 async def test_genre_by_uuid(make_get_request, uuid, expected_status):
     """Вывод конкретного жанра."""
-    url = test_settings.SERVICE_URL + "/api/v1/genres/" + uuid
+    url = test_settings.service_url + "/api/v1/genres/" + uuid
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status
@@ -70,7 +70,7 @@ async def test_genre_by_uuid(make_get_request, uuid, expected_status):
 @pytest.mark.usefixtures("prepare_films_data")
 async def test_genre_not_found_by_uuid(make_get_request, uuid, expected_status):
     """Вывод несуществующего жанра."""
-    url = test_settings.SERVICE_URL + "/api/v1/genres/" + uuid
+    url = test_settings.service_url + "/api/v1/genres/" + uuid
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status
@@ -85,7 +85,7 @@ async def test_genre_not_found_by_uuid(make_get_request, uuid, expected_status):
 @pytest.mark.asyncio
 async def test_film_by_uuid_from_cache(make_get_request, uuid, expected_status):
     """Вывод жанра с учетом кеша."""
-    url = test_settings.SERVICE_URL + "/api/v1/genres/" + uuid
+    url = test_settings.service_url + "/api/v1/genres/" + uuid
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status

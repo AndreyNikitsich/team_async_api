@@ -11,7 +11,7 @@ def genres_data():
 
     bulk_query: list[dict] = []
     for row in es_data:
-        data = {"_index": genre_settings.ES_INDEX, "_id": row["id"]}
+        data = {"_index": genre_settings.es_index, "_id": row["id"]}
         data.update({"_source": row})
         bulk_query.append(data)
 

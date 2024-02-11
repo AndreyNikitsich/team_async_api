@@ -5,7 +5,7 @@ from functional.settings import test_settings
 
 @pytest_asyncio.fixture(scope="session", name="es_client")
 async def es_client():
-    async with AsyncElasticsearch(hosts=test_settings.ES_URL) as client:
+    async with AsyncElasticsearch(hosts=test_settings.es_url) as client:
         yield client
 
 

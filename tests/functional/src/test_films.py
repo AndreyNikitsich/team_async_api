@@ -63,7 +63,7 @@ fake = Faker()
 @pytest.mark.usefixtures("prepare_films_data")
 async def test_films_search(make_get_request, query_data, expected_answer):
     """Поиск фильмов."""
-    url = test_settings.SERVICE_URL + "/api/v1/films/search"
+    url = test_settings.service_url + "/api/v1/films/search"
     body, headers, status = await make_get_request(url, query_data)
 
     assert status == expected_answer["status"]
@@ -120,7 +120,7 @@ async def test_films_search(make_get_request, query_data, expected_answer):
 @pytest.mark.usefixtures("prepare_films_data")
 async def test_films(make_get_request, query_data, expected_answer):
     """Список фильмов."""
-    url = test_settings.SERVICE_URL + "/api/v1/films"
+    url = test_settings.service_url + "/api/v1/films"
     body, headers, status = await make_get_request(url, query_data)
 
     assert status == expected_answer["status"]
@@ -145,7 +145,7 @@ async def test_films(make_get_request, query_data, expected_answer):
 @pytest.mark.usefixtures("prepare_films_data")
 async def test_films_genre(make_get_request, query_data, expected_answer):
     """Список фильмов с фильтрацией по жанрам."""
-    url = test_settings.SERVICE_URL + "/api/v1/films"
+    url = test_settings.service_url + "/api/v1/films"
     body, headers, status = await make_get_request(url, query_data)
 
     assert status == expected_answer["status"]
@@ -161,7 +161,7 @@ async def test_films_genre(make_get_request, query_data, expected_answer):
 @pytest.mark.usefixtures("prepare_films_data")
 async def test_film_by_uuid(make_get_request, uuid, expected_status):
     """Вывод конкретного фильма."""
-    url = test_settings.SERVICE_URL + "/api/v1/films/" + uuid
+    url = test_settings.service_url + "/api/v1/films/" + uuid
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status
@@ -178,7 +178,7 @@ async def test_film_by_uuid(make_get_request, uuid, expected_status):
 @pytest.mark.usefixtures("prepare_films_data")
 async def test_film_not_found_by_uuid(make_get_request, uuid, expected_status):
     """Вывод несуществующего фильма."""
-    url = test_settings.SERVICE_URL + "/api/v1/films/" + uuid
+    url = test_settings.service_url + "/api/v1/films/" + uuid
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status
@@ -201,7 +201,7 @@ async def test_film_not_found_by_uuid(make_get_request, uuid, expected_status):
 @pytest.mark.asyncio
 async def test_search_from_cache(make_get_request, query_data, expected_answer):
     """Поиск фильмов с учетом кеша."""
-    url = test_settings.SERVICE_URL + "/api/v1/films/search"
+    url = test_settings.service_url + "/api/v1/films/search"
     body, headers, status = await make_get_request(url, query_data)
 
     assert status == expected_answer["status"]
@@ -217,7 +217,7 @@ async def test_search_from_cache(make_get_request, query_data, expected_answer):
 @pytest.mark.asyncio
 async def test_film_by_uuid_from_cache(make_get_request, uuid, expected_status):
     """Вывод фильма с учетом кеша."""
-    url = test_settings.SERVICE_URL + "/api/v1/films/" + uuid
+    url = test_settings.service_url + "/api/v1/films/" + uuid
     body, headers, status = await make_get_request(url)
 
     assert status == expected_status

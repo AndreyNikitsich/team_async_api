@@ -5,7 +5,7 @@ from redis.asyncio import Redis
 
 @pytest_asyncio.fixture(scope="session")
 async def cache_client():
-    async with Redis(host=test_settings.REDIS_HOST, port=test_settings.REDIS_PORT) as client:
+    async with Redis(host=test_settings.redis_host, port=test_settings.redis_port) as client:
         yield client
 
 
