@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import pytest
 from faker import Faker
 
@@ -16,7 +18,7 @@ fake = Faker()
                     "page_size": 50,
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
@@ -24,7 +26,7 @@ fake = Faker()
                     "page_number": 1,
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
@@ -32,28 +34,28 @@ fake = Faker()
                     "page_size": 50,
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
                     "query": "The Star",
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
                     "query": "The Star",
                     "sort": "imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
                     "query": "Mashed potato",
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 0}
+                {"status": HTTPStatus.OK, "length": 0}
         )
     ]
 )
@@ -77,40 +79,40 @@ async def test_films_search(make_get_request, query_data, expected_answer):
                     "page_size": 50,
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
                     "page_size": 50,
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
                     "page_number": 1,
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
                     "sort": "imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
         (
                 {
                     "sort": "-imdb_rating",
                     "genre": "Fake"
                 },
-                {"status": 200, "length": 0}
+                {"status": HTTPStatus.OK, "length": 0}
         ),
     ]
 )
@@ -135,7 +137,7 @@ async def test_films(make_get_request, query_data, expected_answer):
                     "sort": "-imdb_rating",
                     "genre": "Action"
                 },
-                {"status": 200}
+                {"status": HTTPStatus.OK}
         ),
     ]
 )
@@ -152,7 +154,7 @@ async def test_films_genre(make_get_request, query_data, expected_answer):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        ("72a42e8c-fdc4-42df-8da5-145907d6309b", 200),
+        ("72a42e8c-fdc4-42df-8da5-145907d6309b", HTTPStatus.OK),
     ]
 )
 @pytest.mark.asyncio
@@ -169,7 +171,7 @@ async def test_film_by_uuid(make_get_request, uuid, expected_status):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        (fake.uuid4(), 404),
+        (fake.uuid4(), HTTPStatus.NOT_FOUND),
     ]
 )
 @pytest.mark.asyncio
@@ -192,7 +194,7 @@ async def test_film_not_found_by_uuid(make_get_request, uuid, expected_status):
                     "page_size": 50,
                     "sort": "-imdb_rating"
                 },
-                {"status": 200, "length": 50}
+                {"status": HTTPStatus.OK, "length": 50}
         ),
     ]
 )
@@ -209,7 +211,7 @@ async def test_search_from_cache(make_get_request, query_data, expected_answer):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        ("72a42e8c-fdc4-42df-8da5-145907d6309b", 200),
+        ("72a42e8c-fdc4-42df-8da5-145907d6309b", HTTPStatus.OK),
     ]
 )
 @pytest.mark.asyncio

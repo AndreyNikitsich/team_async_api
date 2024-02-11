@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import pytest
 from faker import Faker
 
@@ -14,19 +16,19 @@ fake = Faker()
                     "page_number": 1,
                     "page_size": 50,
                 },
-                {"status": 200, "length": 30}
+                {"status": HTTPStatus.OK, "length": 30}
         ),
         (
                 {
                     "page_size": 50,
                 },
-                {"status": 200, "length": 30}
+                {"status": HTTPStatus.OK, "length": 30}
         ),
         (
                 {
                     "page_number": 1,
                 },
-                {"status": 200, "length": 30}
+                {"status": HTTPStatus.OK, "length": 30}
         ),
     ]
 )
@@ -44,7 +46,7 @@ async def test_genres(make_get_request, query_data, expected_answer):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        ("08952b1c-55ff-4cc4-8078-b37fc41b6ff5", 200),
+        ("08952b1c-55ff-4cc4-8078-b37fc41b6ff5", HTTPStatus.OK),
     ]
 )
 @pytest.mark.asyncio
@@ -61,7 +63,7 @@ async def test_genre_by_uuid(make_get_request, uuid, expected_status):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        (fake.uuid4(), 404),
+        (fake.uuid4(), HTTPStatus.NOT_FOUND),
     ]
 )
 @pytest.mark.asyncio
@@ -77,7 +79,7 @@ async def test_genre_not_found_by_uuid(make_get_request, uuid, expected_status):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        ("08952b1c-55ff-4cc4-8078-b37fc41b6ff5", 200),
+        ("08952b1c-55ff-4cc4-8078-b37fc41b6ff5", HTTPStatus.OK),
     ]
 )
 @pytest.mark.asyncio

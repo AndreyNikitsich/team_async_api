@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import pytest
 from faker import Faker
 from functional.testdata.fake_persons import generated_person_films
@@ -14,25 +16,25 @@ fake = Faker()
                 {
                     "query": "Cheryl Ray",
                 },
-                {"status": 200, "length": 1}
+                {"status": HTTPStatus.OK, "length": 1}
         ),
         (
                 {
                     "query": "NOT_FOUNDED_NAME",
                 },
-                {"status": 200, "length": 0}
+                {"status": HTTPStatus.OK, "length": 0}
         ),
         (
                 {
                     "query": "Cheryl Rai",  # test full text search, should find "Cheryl Ray"
                 },
-                {"status": 200, "length": 1}
+                {"status": HTTPStatus.OK, "length": 1}
         ),
         (
                 {
                     "query": "Rebekah",  # test full text search, should find "Rebekah Wiggins", "Rebekah Allen"
                 },
-                {"status": 200, "length": 2}
+                {"status": HTTPStatus.OK, "length": 2}
         ),
     ]
 )
@@ -50,7 +52,7 @@ async def test_persons_search(make_get_request, query_data, expected_answer):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        ("20f26754-95da-4a4e-98a5-ea78e3d29862", 200),
+        ("20f26754-95da-4a4e-98a5-ea78e3d29862", HTTPStatus.OK),
     ]
 )
 @pytest.mark.asyncio
@@ -67,7 +69,7 @@ async def test_person_detail(make_get_request, uuid, expected_status):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        (fake.uuid4(), 404),
+        (fake.uuid4(), HTTPStatus.NOT_FOUND),
     ]
 )
 @pytest.mark.asyncio
@@ -83,7 +85,7 @@ async def test_person_not_found(make_get_request, uuid, expected_status):
 @pytest.mark.parametrize(
     "uuid, expected_status",
     [
-        ("20f26754-95da-4a4e-98a5-ea78e3d29862", 200),
+        ("20f26754-95da-4a4e-98a5-ea78e3d29862", HTTPStatus.OK),
     ]
 )
 @pytest.mark.asyncio
