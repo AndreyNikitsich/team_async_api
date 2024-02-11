@@ -1,12 +1,7 @@
 import os
-from logging import config as logging_config
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-from .logger import LOGGING
-
-logging_config.dictConfig(LOGGING)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -49,6 +44,13 @@ class Settings(BaseSettings):
     redis: RedisSettings = RedisSettings()
     es: ElasticSettings = ElasticSettings()
     api: ApiSettings = ApiSettings()
+    LOGGING_LEVEL: str = Field(default="INFO")
 
 
 settings = Settings()
+
+from logging import config as logging_config  # noqa: E402
+
+from .logger import LOGGING  # noqa: E402
+
+logging_config.dictConfig(LOGGING)
