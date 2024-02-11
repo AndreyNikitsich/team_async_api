@@ -12,8 +12,8 @@ from db import elastic, redis
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    redis.redis = Redis(host=settings.redis.REDIS_HOST, port=settings.redis.REDIS_PORT)
-    elastic.es = AsyncElasticsearch(hosts=[f"{settings.es.ES_SCHEMA}://{settings.es.ES_HOST}:{settings.es.ES_PORT}"])
+    redis.redis = Redis(host=settings.redis.redis_host, port=settings.redis.redis_port)
+    elastic.es = AsyncElasticsearch(hosts=[f"{settings.es.es_schema}://{settings.es.es_host}:{settings.es.es_port}"])
     yield
     await redis.redis.close()
     await elastic.es.close()
@@ -21,10 +21,10 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    title=settings.project_metadata.PROJECT_NAME,
-    docs_url=settings.project_metadata.DOCS_URL,
-    openapi_url=settings.project_metadata.OPENAPI_URL,
-    version=settings.project_metadata.VERSION,
+    title=settings.project_metadata.project_name,
+    docs_url=settings.project_metadata.docs_url,
+    openapi_url=settings.project_metadata.openapi_url,
+    version=settings.project_metadata.version,
 )
 
 app.include_router(api_router, prefix="/api")

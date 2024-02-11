@@ -25,7 +25,7 @@ class CacheService:
     async def put_cache(key: str, data: str):
         """Сохраняем данные запроса в кеше."""
         provider = await cache_provider()
-        await provider.set(key, data, settings.redis.CACHE_EXPIRE_IN_SECONDS)
+        await provider.set(key, data, settings.redis.cache_expire_in_seconds)
 
 
 class QueryCache(CacheService):

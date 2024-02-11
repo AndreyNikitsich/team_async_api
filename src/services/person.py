@@ -19,7 +19,7 @@ class PersonService:
         Возвращает объект персоны по id (uuid).
         Он опционален, так как персона может отсутствовать в базе.
         """
-        data = await self.elastic_service.get_model(index=settings.es.PERSONS_INDEX, model_id=person_id)
+        data = await self.elastic_service.get_model(index=settings.es.persons_index, model_id=person_id)
         if not data:
             return None
 
@@ -53,7 +53,7 @@ class PersonService:
         }
 
         data = await self.elastic_service.search_models(
-            index=settings.es.PERSONS_INDEX,
+            index=settings.es.persons_index,
             query_match=query_match,
             page_number=page_number,
             page_size=page_size,
@@ -84,7 +84,7 @@ class PersonService:
         Может возвращать пустой список, так как база фильмов может быть пуста.
         """
         data = await self.elastic_service.search_models(
-            index=settings.es.PERSONS_INDEX, page_number=page_number, page_size=page_size, sort=sort
+            index=settings.es.persons_index, page_number=page_number, page_size=page_size, sort=sort
         )
 
         if not data:
@@ -119,7 +119,7 @@ class PersonService:
             }
 
         data = await self.elastic_service.search_models(
-            index=settings.es.PERSONS_INDEX,
+            index=settings.es.persons_index,
             query_match=query_match,
             page_number=page_number,
             page_size=page_size,

@@ -27,7 +27,7 @@ class FilmService:
             query_match = {"terms": {"genres_names": genre, "boost": 1.0}}
 
         data = await self.elastic_service.search_models(
-            index=settings.es.FILMS_INDEX,
+            index=settings.es.films_index,
             page_number=page_number,
             page_size=page_size,
             query_match=query_match,
@@ -73,7 +73,7 @@ class FilmService:
             }
 
         data = await self.elastic_service.search_models(
-            index=settings.es.FILMS_INDEX,
+            index=settings.es.films_index,
             page_number=page_number,
             page_size=page_size,
             query_match=query_match,
@@ -92,7 +92,7 @@ class FilmService:
         Возвращает объект фильма по id (uuid).
         Он опционален, так как фильм может отсутствовать в базе.
         """
-        data = await self.elastic_service.get_model(index=settings.es.FILMS_INDEX, model_id=film_id)
+        data = await self.elastic_service.get_model(index=settings.es.films_index, model_id=film_id)
         if not data:
             return None
 

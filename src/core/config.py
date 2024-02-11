@@ -13,30 +13,30 @@ class EnvSettings(BaseSettings):
 
 
 class ProjectMetadataSettings(EnvSettings):
-    PROJECT_NAME: str = Field(default="movies")
-    DOCS_URL: str = "/api/openapi"
-    OPENAPI_URL: str = "/api/openapi.json"
-    VERSION: str = "0.1.0"
+    project_name: str = Field(default="movies")
+    docs_url: str = "/api/openapi"
+    openapi_url: str = "/api/openapi.json"
+    version: str = "0.1.0"
 
 
 class RedisSettings(EnvSettings):
-    REDIS_HOST: str = Field(default="127.0.0.1")
-    REDIS_PORT: int = Field(default=6379)
-    CACHE_EXPIRE_IN_SECONDS: int = Field(default=(60 * 5))
+    redis_host: str = Field(default="127.0.0.1")
+    redis_port: int = Field(default=6379)
+    cache_expire_in_seconds: int = Field(default=(60 * 5))
 
 
 class ElasticSettings(EnvSettings):
-    ES_SCHEMA: str = Field(default="http")
-    ES_HOST: str = Field(default="127.0.0.1")
-    ES_PORT: int = Field(default=9200)
-    FILMS_INDEX: str = Field(default="movies")
-    PERSONS_INDEX: str = Field(default="persons")
-    GENRE_INDEX: str = Field(default="genres")
+    es_schema: str = Field(default="http")
+    es_host: str = Field(default="127.0.0.1")
+    es_port: int = Field(default=9200)
+    films_index: str = Field(default="movies")
+    persons_index: str = Field(default="persons")
+    genre_index: str = Field(default="genres")
 
 
 class ApiSettings(EnvSettings):
-    DEFAULT_PAGE_NUMBER: int = 1
-    DEFAULT_PAGE_SIZE: int = 50
+    default_page_number: int = 1
+    default_page_size: int = 50
 
 
 class Settings(BaseSettings):
@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     redis: RedisSettings = RedisSettings()
     es: ElasticSettings = ElasticSettings()
     api: ApiSettings = ApiSettings()
-    LOGGING_LEVEL: str = Field(default="INFO")
+    logging_level: str = Field(default="INFO")
 
 
 settings = Settings()

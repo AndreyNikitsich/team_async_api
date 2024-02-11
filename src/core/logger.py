@@ -39,19 +39,19 @@ LOGGING = {
     "loggers": {
         "": {
             "handlers": LOG_DEFAULT_HANDLERS,
-            "level": settings.LOGGING_LEVEL,  # type: ignore
+            "level": settings.logging_level,  # type: ignore
         },
         "uvicorn.error": {
-            "level": settings.LOGGING_LEVEL,  # type: ignore
+            "level": settings.logging_level,  # type: ignore
         },
         "uvicorn.access": {
             "handlers": ["access"],
-            "level": settings.LOGGING_LEVEL,  # type: ignore
+            "level": settings.logging_level,  # type: ignore
             "propagate": False,
         },
     },
     "root": {
-        "level": settings.LOGGING_LEVEL,  # type: ignore
+        "level": settings.logging_level,  # type: ignore
         "formatter": "verbose",
         "handlers": LOG_DEFAULT_HANDLERS,
     },

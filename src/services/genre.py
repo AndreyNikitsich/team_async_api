@@ -26,7 +26,7 @@ class GenreService:
         Может возвращать пустой список, так как база фильмов может быть пуста.
         """
         data = await self.elastic_service.search_models(
-            index=settings.es.GENRE_INDEX, page_number=page_number, page_size=page_size, sort=sort
+            index=settings.es.genre_index, page_number=page_number, page_size=page_size, sort=sort
         )
 
         if not data:
@@ -64,7 +64,7 @@ class GenreService:
             }
 
         data = await self.elastic_service.search_models(
-            index=settings.es.GENRE_INDEX, query=query_match, page_number=page_number, page_size=page_size, sort=sort
+            index=settings.es.genre_index, query=query_match, page_number=page_number, page_size=page_size, sort=sort
         )
 
         if not data:
@@ -79,7 +79,7 @@ class GenreService:
         Возвращает объект жанра по id (uuid).
         Он опционален, так как жанр может отсутствовать в базе.
         """
-        data = await self.elastic_service.get_model(index=settings.es.GENRE_INDEX, model_id=genre_id)
+        data = await self.elastic_service.get_model(index=settings.es.genre_index, model_id=genre_id)
         if not data:
             return None
 
