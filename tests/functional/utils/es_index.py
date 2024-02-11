@@ -1,5 +1,3 @@
-import time
-
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
 from functional.settings import TestSettings
@@ -16,8 +14,7 @@ class ESIndex:
             index=self.index, **self.index_mapping)
 
     async def update(self, es_data):
-        updated, errors = await async_bulk(client=self.client, actions=es_data)
-        time.sleep(2)
+        updated, errors = await async_bulk(client=self.client, actions=es_data, refresh="wait_for")
         if errors:
             raise Exception("Ошибка записи данных в Elasticsearch")
 
